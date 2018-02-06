@@ -1,0 +1,40 @@
+{
+    "id": "ams-view._",
+    "version": 1,
+    "resource": "v1/resource/api/_version/1/",
+    "uri": "v1/api/ams-view._/_version/1/",
+    "status": "draft",
+    "route": [
+        {
+            "id": "ams-view",
+            "type": "static"
+        },
+        {
+            "id": "Task",
+            "type": "dynamic"
+        }
+    ],
+    "methods": {
+        "get": {
+            "urlParameters": {
+                "TYPE": {
+                    "type": "string"
+                }
+            }
+        } 
+    },
+    "request": {
+        "resource": "v1/resource/ams-view/_version/1/"
+    },    
+    "response": {
+        "resource": "v1/resource/ams-view/_version/1/"
+    },
+    "connectivity": [
+        {
+            "handlerType": "native",
+            "native": {
+                "id": "AMSApis"
+            }
+        }
+    ]
+}

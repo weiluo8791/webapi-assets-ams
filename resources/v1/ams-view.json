@@ -1,0 +1,40 @@
+{
+    "id": "ams-view",
+    "version": 1,
+    "resource": "v1/resource/resource/_version/1/",
+    "status": "draft",
+    "uri": "v1/resource/ams-view/_version/1/",
+    "cache": {
+        "timeToLive": "short",
+        "timeConsideredFresh": "always"
+    },
+    "properties": {
+        "Task": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },        
+        "displayName": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "sites": {
+            "type": "object[]",
+            "required": true,
+            "object": {
+                "properties": {
+                    "wac": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "siteName": {
+                        "type": "string",
+                        "required": true
+                    }
+                }
+            }
+        }             			
+    }
+}

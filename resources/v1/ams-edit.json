@@ -1,0 +1,84 @@
+{
+    "id": "ams-edit",
+    "version": 1,
+    "resource": "v1/resource/resource/_version/1/",
+    "status": "draft",
+    "uri": "v1/resource/ams-edit/_version/1/",
+    "cache": {
+        "timeToLive": "short",
+        "timeConsideredFresh": "always"
+    },
+    "properties": {
+        "Task": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },
+        "HTTP_REFERER": {
+            "type": "string"
+        },
+        "REMOTE_ADDR": {
+            "type": "string"
+        },
+        "REMOTE_HOST": {
+            "type": "string"
+        },
+        "HTTP_USER_AGENT": {
+            "type": "string"
+        },
+        "HTTP_COOKIE": {
+            "type": "string"
+        },
+        "HTTPS": {
+            "type": "string"
+        },
+        "SERVER_PORT": {
+            "type": "string"
+        },
+        "SERVER_PORT_SECURE": {
+            "type": "string"
+        },
+        "NTUSER": {
+            "type": "string"
+        },
+        "TYPE": {
+            "type": "string"
+        },
+        "COOKIE": {
+            "type": "string"
+        },
+        "WAC": {
+            "type": "string"
+        },
+        "desc": {
+            "type": "string"
+        },
+        "contact": {
+            "type": "string"
+        },
+        "contactphone": {
+            "type": "string"
+        },
+        "hospref": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "notifytype": {
+            "type": "string"
+        },        
+        "livesystem": {
+            "type": "string"
+        },
+        "testsystem": {
+            "type": "string"
+        },
+        "desctext": {
+            "type": "string"
+        },
+        "tskst": {
+            "type": "string"
+        }			
+    }
+}

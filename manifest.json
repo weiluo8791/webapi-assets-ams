@@ -1,0 +1,28 @@
+{
+	"id": "ams-manifest",
+	"version": 1,
+	"versionString": "0.0.0.1",
+	"resource": "v1/resource/manifest/_version/1/",
+	"resources": [
+		"resources/v1/ams-edit.json",
+		"resources/v1/ams-view.json"
+	],
+	"apis": [
+		"apis/v1/ams-edit._.json",
+		"apis/v1/ams-view._.json"
+	],
+	"scopes": [
+		"scopes/ams-task-edit.json",
+		"scopes/ams-task-view.json"
+	],	
+	"requires": [
+		{
+			"type": "resource",
+			"resource": "v1/resource/resource/_version/1/"
+		},
+		{
+			"type": "resource",
+			"resource": "v1/resource/api/_version/1/"
+		}
+	]
+}

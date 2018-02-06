@@ -1,0 +1,27 @@
+{
+    "id": "ams-task-edit",
+    "resource": "v1/resource/scope/_version/1/",    
+    "description": [
+        {
+            "data": "Allows edit ams task",
+            "contentType": "text/plain",
+            "language": "en-US"
+        }
+    ],
+    "defaultRule": "allow",
+    "aclRules": [],
+    "apis": [
+        {
+            "api": "ams-edit._",
+            "version": 1,
+            "methods": [
+                "get",
+                "put",
+                "patch",
+                "post",
+                "delete"
+            ],
+            "defURI": "v1/api/ams-edit._/_version/1/"
+        }     
+    ]
+}
