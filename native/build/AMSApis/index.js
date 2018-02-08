@@ -12,7 +12,7 @@ function getAmsData(type) {
         totalData = [];
         return new Promise((resolve, reject) => {
             let client = net_1.createConnection({ host: HOST, port: PORT }, () => {
-                let message = Buffer.from('0009000b52454d4f54455f41444452000d3137322e33302e35342e313236000b52454d4f54455f484f5354000d3137322e33302e35342e313236000f485454505f555345525f4147454e5400734d6f7a696c6c612f352e30202857696e646f7773204e542031302e303b2057696e36343b2078363429204170706c655765624b69742f3533372e333620284b48544d4c2c206c696b65204765636b6f29204368726f6d652f36332e302e333233392e313332205361666172692f3533372e3336000b485454505f434f4f4b4945019768756273706f7475746b3d61313033633763316232616239613033333932306539376433376634633537393b205f67613d4741312e322e3631353734363238362e313530383530393836363b205f6769643d4741312e322e313438303439323737392e313531363131333330383b205f5f687374633d3138383835393633362e61313033633763316232616239613033333932306539376433376634633537392e313530383936323436343831322e313531343330393238323730382e313531363133383435343530352e363b205f5f756e616d3d366434336436342d31363039336464653162332d32613961383532622d343b205f5f75746d613d3138383835393633362e3631353734363238362e313530383530393836362e313531363134303437312e313531363134303437312e313b205f5f75746d7a3d3138383835393633362e313531363134303437312e312e312e75746d6373723d28646972656374297c75746d63636e3d28646972656374297c75746d636d643d286e6f6e65293b20706373743d454b746f57796f4a4f3533343036350005485454505300036f6666000b5345525645525f504f52540002383000125345525645525f504f52545f53454355524500013000064e54555345520011776c756f406d656469746563682e636f6d00045459504500085775735369746573', 'hex');
+                let message = Buffer.from('000a000b52454d4f54455f41444452000b3137322e33302e35312e32000b52454d4f54455f484f5354000b3137322e33302e35312e32000f485454505f555345525f4147454e540014506f73746d616e52756e74696d652f372e312e31000b485454505f434f4f4b49450014706373743d73554d504f4a51724c3533373237320005485454505300036f6666000b5345525645525f504f52540002383000125345525645525f504f52545f53454355524500013000064e54555345520013524f47455253406d656469746563682e636f6d00045459504500075461736b47657400047461736b000734323935363038', 'hex');
                 client.write(message);
             });
             client.on('data', (data) => {
@@ -65,7 +65,7 @@ class AMSApis extends Handler_1.Handler {
         let TYPE;
         Promise.all([ctx.apiInfo])
             .then(([apiInfo]) => {
-            task = apiInfo.routeParams['Task'];
+            task = apiInfo.routeParams['task'];
             TYPE = ctx.query['TYPE'];
             return getAmsData(TYPE);
         })
@@ -74,10 +74,26 @@ class AMSApis extends Handler_1.Handler {
             const json = {
                 resource: 'v1/resource/ams-view/_version/1/',
                 uri: 'v1/ams-view/',
-                Task: task,
-                displayName: jdata.displayName,
-                email: jdata.email,
-                sites: jdata.sites
+                task: task,
+                site: jdata.site,
+                module: jdata.module,
+                'ams.task.entry.time': jdata['ams.task.entry.time'],
+                'task.status': jdata['task.status'],
+                'task.priority': jdata['task.priority'],
+                'ams.task.patient.safety': jdata['ams.task.patient.safety'],
+                'ams.task.reference.number': jdata['ams.task.reference.number'],
+                'ams.task.description': jdata['ams.task.description'],
+                'task.request.type': jdata['task.request.type'],
+                'ams.task.live.system': jdata['ams.task.live.system'],
+                'ams.task.test.system': jdata['ams.task.test.system'],
+                'ams.task.update.system': jdata['ams.task.update.system'],
+                'ams.task.contact': jdata['ams.task.contact'],
+                'ams.task.contact.phone': jdata['ams.task.contact.phone'],
+                'module.notifications': jdata['module.notifications'],
+                'task.received.by': jdata['task.received.by'],
+                'task.application.specialist': jdata['task.application.specialist'],
+                'task.other.staff': jdata['task.other.staff'],
+                'task.last.edit': jdata['task.last.edit']
             };
             return { json, statusCode: 200 };
         })

@@ -9,32 +9,202 @@
         "timeConsideredFresh": "always"
     },
     "properties": {
-        "Task": {
+        "task": {
             "type": "string",
             "required": true,
             "responseOnly": true
+        },
+        "site": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "ams.account.billing.code": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "ams.account.site.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "module": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "mod": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "module.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "ams.task.entry.time": {
+            "type": "string",
+            "#doc": "ISO-8601 Date"
+        },
+        "task.status": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.status": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "task.status.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "task.priority": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.priority": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "task.priority.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "ams.task.patient.safety": {
+            "type": "string"
+        },
+        "ams.task.reference.number": {
+            "type": "string"
+        },
+        "ams.task.description": {
+            "type": "string"
+        },
+        "task.request.type": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.request.type": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "request.type.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "ams.task.live.system": {
+            "type": "string"
+        },
+        "ams.task.test.system": {
+            "type": "string"
+        },
+        "ams.task.update.system": {
+            "type": "string"
         },        
-        "displayName": {
+        "ams.task.contact": {
             "type": "string"
         },
-        "email": {
+        "ams.task.contact.phone": {
             "type": "string"
         },
-        "sites": {
+        "module.notifications": {
             "type": "object[]",
             "required": true,
             "object": {
                 "properties": {
-                    "wac": {
+                    "mod.notif.contact": {
                         "type": "string",
                         "required": true
                     },
-                    "siteName": {
+                    "ams.contact": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "mod.notif.contact.email": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "mod.notif.contact.type": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "mod.notif.contact.type.desc": {
                         "type": "string",
                         "required": true
                     }
                 }
             }
-        }             			
+        },
+        "task.received.by": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.received.by": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "task.received.by.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "task.application.specialist": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.consultant": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "task.application.specialist.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "task.other.staff": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.other.staff": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "task.other.staff.name": {
+                        "type": "string",
+                        "required": true
+                    }
+                },
+                "required": true
+            }
+        },
+        "task.last.edit": {
+            "type": "string",
+            "#doc": "ISO-8601 Date"
+        }
     }
 }
