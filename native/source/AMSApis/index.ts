@@ -10,10 +10,36 @@ import { createConnection } from 'net';
 // import * as net from 'net';
 // import * as StreamBuffers from 'stream-buffers';
 // import * as URL from 'url';
+import * as os from 'os';
 
-async function getAmsData(type: string) {
-    let HOST = '172.25.0.2';
-    let PORT = 1022;
+// constant for name length
+const REMOTE_ADDR_L = '000b';
+const REMOTE_HOST_L = '000b';
+const HTTP_USER_AGENT_L = '000f';
+const HTTPS_L = '0005';
+const SERVER_PORT_L = '000b';
+const SERVER_PORT_SECURE_L = '0012';
+const NTUSER_L = '0006';
+const TYPE_L = '0004';
+const task_L = '0004';
+
+// interface for AMS package
+interface AmsPackage {
+    REMOTE_ADDR: string;
+    REMOTE_HOST: string;
+    HTTP_USER_AGENT: string;
+    HTTPS: string;
+    SERVER_PORT: string;
+    SERVER_PORT_SECURE: string;
+    NTUSER: string;
+    TYPE: string;
+    task: string;
+    AMS_PARAM_TOTAL: string;
+}
+
+async function getAmsData(amsPackage: string) {
+    const HOST = '172.25.0.2';
+    const PORT = 1022;
     let totalData = [];
 
     totalData = [];
@@ -21,7 +47,7 @@ async function getAmsData(type: string) {
         let client = createConnection({ host: HOST, port: PORT }, () => {
             // 'connect' listener
             // console.log('connected to server!');
-            let message = Buffer.from('000a000b52454d4f54455f41444452000b3137322e33302e35312e32000b52454d4f54455f484f5354000b3137322e33302e35312e32000f485454505f555345525f4147454e540014506f73746d616e52756e74696d652f372e312e31000b485454505f434f4f4b49450014706373743d73554d504f4a51724c3533373237320005485454505300036f6666000b5345525645525f504f52540002383000125345525645525f504f52545f53454355524500013000064e54555345520013524f47455253406d656469746563682e636f6d00045459504500075461736b47657400047461736b000734323935363038', 'hex');
+            let message = Buffer.from(amsPackage, 'hex');
             client.write(message);
         });
         client.on('data', (data) => {
@@ -72,9 +98,69 @@ function processAmsData(buf) {
         }
         i = j + k + 1;
     }
-    // console.log('header', header);
-    // console.log('data', resData);
+
     return JSON.parse(resData);
+}
+
+// return localIP in array
+function getLocalIp() {
+    let interfaces = os.networkInterfaces();
+    let addresses = [];
+    for (let k in interfaces) {
+        for (let k2 in interfaces[k]) {
+            let address = interfaces[k][k2];
+            if (address.family === 'IPv4' && !address.internal) {
+                addresses.push(address.address);
+            }
+        }
+    }
+    return addresses;
+}
+
+// for length in the format of hex 0000
+function hex16(val) {
+    val &= 0xFFFF;
+    let hex = val.toString(16).toUpperCase();
+    return ('0000' + hex).slice(-4);
+}
+
+// from string  in for format of hex 00
+function stringToHex(str) {
+    let hex = '';
+    for (let i = 0; i < str.length; i++) {
+        hex += '' + str.charCodeAt(i).toString(16);
+    }
+    return hex;
+}
+
+function packageAmsSend(task: string, Type: string) {
+    let localIp = getLocalIp()[0];
+    let amsPackage: AmsPackage = {
+        REMOTE_ADDR: localIp,
+        REMOTE_HOST: localIp,
+        HTTP_USER_AGENT: 'PostmanRuntime/7.1.1',
+        HTTPS: 'off',
+        SERVER_PORT: '80',
+        SERVER_PORT_SECURE: '0',
+        NTUSER: 'WLUO@meditech.com',
+        TYPE: Type,
+        task: task,
+        AMS_PARAM_TOTAL: '0009'
+    };
+
+    let amsPacket = '';
+    amsPacket += amsPackage.AMS_PARAM_TOTAL;
+    amsPacket += REMOTE_ADDR_L + stringToHex('REMOTE_ADDR') + hex16(amsPackage.REMOTE_ADDR.length) + stringToHex(amsPackage.REMOTE_ADDR);
+    amsPacket += REMOTE_HOST_L + stringToHex('REMOTE_HOST') + hex16(amsPackage.REMOTE_HOST.length) + stringToHex(amsPackage.REMOTE_HOST);
+    amsPacket += HTTP_USER_AGENT_L + stringToHex('HTTP_USER_AGENT') + hex16(amsPackage.HTTP_USER_AGENT.length) + stringToHex(amsPackage.HTTP_USER_AGENT);
+    amsPacket += HTTPS_L + stringToHex('HTTPS') + hex16(amsPackage.HTTPS.length) + stringToHex(amsPackage.HTTPS);
+    amsPacket += SERVER_PORT_L + stringToHex('SERVER_PORT') + hex16(amsPackage.SERVER_PORT.length) + stringToHex(amsPackage.SERVER_PORT);
+    amsPacket += SERVER_PORT_SECURE_L + stringToHex('SERVER_PORT_SECURE') + hex16(amsPackage.SERVER_PORT_SECURE.length) + stringToHex(amsPackage.SERVER_PORT_SECURE);
+    amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
+    amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
+    amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+
+    return amsPacket;
 }
 
 export class AMSApis extends Handler {
@@ -90,7 +176,10 @@ export class AMSApis extends Handler {
             .then(([apiInfo]) => {
                 task = apiInfo.routeParams['task'];
                 TYPE = ctx.query['TYPE'];
-                return getAmsData(TYPE);
+                return packageAmsSend(task, TYPE);
+            })
+            .then(p => {
+                return getAmsData(p);
             })
             .then(a => {
                 let jdata = processAmsData(a);
