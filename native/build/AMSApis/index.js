@@ -136,31 +136,74 @@ class AMSApis extends Handler_1.Handler {
         })
             .then(a => {
             let jdata = processAmsData(a);
-            const json = {
-                resource: 'v1/resource/ams-view/_version/1/',
-                uri: 'v1/ams-view/',
-                task: task,
-                site: jdata.site,
-                module: jdata.module,
-                'ams.task.entry.time': jdata['ams.task.entry.time'],
-                'task.status': jdata['task.status'],
-                'task.priority': jdata['task.priority'],
-                'ams.task.patient.safety': jdata['ams.task.patient.safety'],
-                'ams.task.reference.number': jdata['ams.task.reference.number'],
-                'ams.task.description': jdata['ams.task.description'],
-                'task.request.type': jdata['task.request.type'],
-                'ams.task.live.system': jdata['ams.task.live.system'],
-                'ams.task.test.system': jdata['ams.task.test.system'],
-                'ams.task.update.system': jdata['ams.task.update.system'],
-                'ams.task.contact': jdata['ams.task.contact'],
-                'ams.task.contact.phone': jdata['ams.task.contact.phone'],
-                'module.notifications': jdata['module.notifications'],
-                'task.received.by': jdata['task.received.by'],
-                'task.application.specialist': jdata['task.application.specialist'],
-                'task.other.staff': jdata['task.other.staff'],
-                'task.last.edit': jdata['task.last.edit']
-            };
-            return { json, statusCode: 200 };
+            if (jdata['errors']) {
+                const errors = {
+                    resource: 'v1/resource/ams-view/_version/1/',
+                    uri: 'v1/ams-view/',
+                    task: task,
+                    errors: jdata['errors']
+                };
+                throw new errors_1.RestApiRequestError(400, '', {}, errors);
+            }
+            else {
+                const json = {
+                    resource: 'v1/resource/ams-view/_version/1/',
+                    uri: 'v1/ams-view/',
+                    task: task,
+                    site: jdata.site,
+                    module: jdata.module,
+                    'ams.task.received.date': jdata['ams.task.received.date'],
+                    'ams.task.product.group': jdata['ams.task.product.group'],
+                    'ams.task.entry.time': jdata['ams.task.entry.time'],
+                    'task.status': jdata['task.status'],
+                    'task.priority': jdata['task.priority'],
+                    'ams.task.patient.safety': jdata['ams.task.patient.safety'],
+                    'ams.task.reference.number': jdata['ams.task.reference.number'],
+                    'ams.task.description': jdata['ams.task.description'],
+                    'task.request.type': jdata['task.request.type'],
+                    'ams.task.live.system': jdata['ams.task.live.system'],
+                    'ams.task.test.system': jdata['ams.task.test.system'],
+                    'ams.task.update.system': jdata['ams.task.update.system'],
+                    'ams.task.contact': jdata['ams.task.contact'],
+                    'ams.task.contact.phone': jdata['ams.task.contact.phone'],
+                    'email': jdata['email'],
+                    'task.received.by': jdata['task.received.by'],
+                    'task.application.specialist': jdata['task.application.specialist'],
+                    'task.other.staff': jdata['task.other.staff'],
+                    'task.last.edit': jdata['task.last.edit']
+                };
+                if (jdata['task.status.completed.date']) {
+                    json['task.status.completed.date'] = jdata['task.status.completed.date'];
+                }
+                if (jdata['priority.lists']) {
+                    json['priority.lists'] = jdata['priority.lists'];
+                }
+                if (jdata['module.notifications']) {
+                    json['module.notifications'] = jdata['module.notifications'];
+                }
+                if (jdata['task.responsible.user']) {
+                    json['task.responsible.user'] = jdata['task.responsible.user'];
+                }
+                if (jdata['integrated.modules']) {
+                    json['integrated.modules'] = jdata['integrated.modules'];
+                }
+                if (jdata['related.issues']) {
+                    json['related.issues'] = jdata['related.issues'];
+                }
+                if (jdata['web.uploaded.files']) {
+                    json['web.uploaded.files'] = jdata['web.uploaded.files'];
+                }
+                if (jdata['ams.added.files']) {
+                    json['ams.added.files'] = jdata['ams.added.files'];
+                }
+                if (jdata['ams.kb.articles']) {
+                    json['ams.kb.articles'] = jdata['ams.kb.articles'];
+                }
+                if (jdata['warnings']) {
+                    json['warnings'] = jdata['warnings'];
+                }
+                return { json, statusCode: 200 };
+            }
         })
             .then(resolvePromise, rejectPromise);
     }
