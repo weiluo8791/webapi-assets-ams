@@ -1,0 +1,42 @@
+{
+    "id": "ams-view._.customerText._",
+    "version": 1,
+    "resource": "v1/resource/api/_version/1/",
+    "uri": "v1/api/ams-view._.customerText._/_version/1/",
+    "status": "draft",
+    "route": [
+        {
+            "id": "ams-view",
+            "type": "static"
+        },
+        {
+            "id": "task",
+            "type": "dynamic"
+        },
+        {
+            "id": "customerText",
+            "type": "static"
+        },
+        {
+            "id": "range",
+            "type": "dynamic"
+        }
+    ],
+    "methods": {
+        "get": {}
+    },
+    "request": {
+        "resource": "v1/resource/customerText/_version/1/"
+    },
+    "response": {
+        "resource": "v1/resource/customerText/_version/1/"
+    },
+    "connectivity": [
+        {
+            "handlerType": "native",
+            "native": {
+                "id": "AMSApis"
+            }
+        }
+    ]
+}
