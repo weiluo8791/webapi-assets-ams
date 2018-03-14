@@ -14,389 +14,43 @@
             "required": true,
             "responseOnly": true
         },
-        "site": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "ams.account.billing.code": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "ams.account.site.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "module": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "mod": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "module.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "ams.task.entry.time": {
+        "text": {
             "type": "string",
             "required": true,
-            "#doc": "ISO-8601 Date"
+            "responseOnly": true
         },
-        "ams.task.received.date": {
+        "count": {
             "type": "string",
-            "required": true,
-            "#doc": "ISO-8601 Date"
+            "#doc": "Text Entry count"
         },
-        "ams.task.product.group": {
+        "start": {
             "type": "string",
-            "required": true
+            "#doc": "Start range"
         },
-        "task.status": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.status": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.status.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "task.status.completed.date": {
+        "end": {
             "type": "string",
-            "#doc": "ISO-8601 Date"
-        },        
-        "task.priority": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.priority": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.priority.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
+            "#doc": "End range"
         },
-        "ams.task.patient.safety": {
-            "type": "string",
-            "required": true
-        },
-        "priority.lists": {
+        "event": {
             "type": "object[]",
             "object": {
                 "properties": {
-                    "priority.number": {
+                    "number": {
                         "type": "string"
                     },
-                    "priority.module": {
-                        "type": "string"
-                    },
-                    "priority.module.name": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "ams.task.reference.number": {
-            "type": "string",
-            "required": true
-        },
-        "ams.task.description": {
-            "type": "string",
-            "required": true
-        },
-        "task.request.type": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.request.type": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "request.type.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "ams.task.live.system": {
-            "type": "string",
-            "required": true
-        },
-        "ams.task.test.system": {
-            "type": "string",
-            "required": true
-        },
-        "ams.task.update.system": {
-            "type": "string",
-            "required": true
-        },
-        "ams.task.contact": {
-            "type": "string",
-            "required": true
-        },
-        "ams.task.contact.phone": {
-            "type": "string",
-            "required": true
-        },
-        "email": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.email": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "ams.task.email.notify.type": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.notify.type.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "module.notifications": {
-            "type": "object[]",
-            "required": true,
-            "object": {
-                "properties": {
-                    "mod.notif.contact": {
-                        "type": "string"
-                    },
-                    "ams.contact": {
-                        "type": "string"
-                    },
-                    "mod.notif.contact.email": {
-                        "type": "string"
-                    },
-                    "mod.notif.contact.type": {
-                        "type": "string"
-                    },
-                    "mod.notif.contact.type.desc": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "task.received.by": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.received.by": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.received.by.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "task.responsible.user": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.responsible.user": {
-                        "type": "string"
-                    },
-                    "ams.task.responsible.user.name": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "task.application.specialist": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.consultant": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.application.specialist.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "task.other.staff": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.other.staff": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.other.staff.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "integrated.modules": {
-            "type": "object[]",
-            "object": {
-                "properties": {
-                    "user.mnemonic": {
-                        "type": "string"
-                    },
-                    "user.name": {
-                        "type": "string"
-                    },
-                    "module": {
-                        "type": "string"
-                    },
-                    "module.name": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "extension": {
-                        "type": "string"
-                    },
-                    "location": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "task.last.edit": {
-            "type": "string",
-            "required": true,
-            "#doc": "ISO-8601 Date"
-        },
-        "related.issues": {
-            "type": "object[]",
-            "object": {
-                "properties": {
-                    "task": {
-                        "type": "string"
-                    },
-                    "wac": {
-                        "type": "string"
-                    },
-                    "last.edit": {
-                        "type": "string",
-                        "#doc": "ISO-8601 Date"
-                    },
-                    "module": {
-                        "type": "string"
-                    },
-                    "status": {
-                        "type": "string"
-                    },
-                    "status.name": {
-                        "type": "string"
-                    },
-                    "task.description": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "web.uploaded.files": {
-            "type": "object[]",
-            "object": {
-                "properties": {
-                    "file.name": {
-                        "type": "string"
-                    },
-                    "file.description": {
-                        "type": "string"
-                    },
-                    "file.upload.date": {
-                        "type": "string",
-                        "#doc": "ISO-8601 Date"
-                    },
-                    "file.upload.user": {
-                        "type": "string"
-                    },
-                    "file.upload.user.name": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "ams.added.files": {
-            "type": "object[]",
-            "object": {
-                "properties": {
-                    "file.url": {
-                        "type": "string"
-                    },
-                    "file.upload.date": {
-                        "type": "string",
-                        "#doc": "ISO-8601 Date"
-                    },
-                    "file.upload.size": {
-                        "type": "string"
-                    },
-                    "file.upload.user": {
-                        "type": "string"
-                    },
-                    "file.upload.user.name": {
-                        "type": "string"
-                    },
-                    "file.name": {
-                        "type": "string"
-                    },
-                    "file.description": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "ams.kb.articles": {
-            "type": "object[]",
-            "object": {
-                "properties": {
-                    "kb.id": {
-                        "type": "string"
-                    },
-                    "kb.module": {
-                        "type": "string"
-                    },
-                    "kb.url": {
-                        "type": "string"
-                    },
-                    "kb.description": {
-                        "type": "string"
+                    "lines": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "number": {
+                                    "type": "string"
+                                },
+                                "text": {
+                                    "type": "string",
+                                    "#doc": "Up to 80 characters, Will be nil for blank lines."
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -405,7 +59,13 @@
             "type": "object[]",
             "object": {
                 "properties": {
-                    "task.switch.wac": {
+                    "warning.code": {
+                        "type": "string"
+                    },
+                    "wac.from": {
+                        "type": "string"
+                    },
+                    "wac.to": {
                         "type": "string"
                     }
                 }

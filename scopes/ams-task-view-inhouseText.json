@@ -1,0 +1,23 @@
+{
+    "id": "ams-task-view-inhouseText",
+    "resource": "v1/resource/scope/_version/1/",    
+    "description": [
+        {
+            "data": "Allows view ams task inhouse text",
+            "contentType": "text/plain",
+            "language": "en-US"
+        }
+    ],
+    "defaultRule": "allow",
+    "aclRules": [],
+    "apis": [
+        {
+            "api": "ams-view._.inhouseText._",
+            "version": 1,
+            "methods": [
+                "get"
+            ],
+            "defURI": "v1/api/ams-view._.inhouseText._/_version/1/"
+        }     
+    ]
+}
