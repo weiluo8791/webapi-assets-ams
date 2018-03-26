@@ -27,8 +27,8 @@ const text_L = '0004';
 const start_L = '0005';
 const end_L = '0003';
 
-// interface for AMS package
-interface AmsPackage {
+// interface for AMS package for GET
+interface AmsPackageGet {
     REMOTE_ADDR: string;
     REMOTE_HOST: string;
     HTTP_USER_AGENT: string;
@@ -44,6 +44,21 @@ interface AmsPackage {
     AMS_PARAM_TOTAL: string;
 }
 
+// interface for AMS package PUT
+interface AmsPackagePut {
+    REMOTE_ADDR: string;
+    REMOTE_HOST: string;
+    HTTP_USER_AGENT: string;
+    HTTPS: string;
+    SERVER_PORT: string;
+    SERVER_PORT_SECURE: string;
+    NTUSER: string;
+    TYPE: string;
+    task: string;
+    body: string;
+    AMS_PARAM_TOTAL: string;
+}
+
 async function getAmsData(amsPackage: string) {
     const HOST = '172.25.0.2';
     const PORT = 1022;
@@ -56,6 +71,34 @@ async function getAmsData(amsPackage: string) {
             // console.log('connected to server!');
             let message = Buffer.from(amsPackage, 'hex');
             client.write(message);
+        });
+        client.on('data', (data) => {
+            // console.log(`Received ${data.length} bytes of data.`);
+            totalData.push(data);
+        });
+        client.on('close', () => {
+            // console.log('disconnected from server');
+            let data = Buffer.concat(totalData);
+            client.destroy();
+            resolve(data);
+        });
+    });
+}
+
+async function putAmsData(amsPacket: string) {
+    // Define constant
+    const HOST = '172.25.0.2';
+    const PORT = 1022;
+    // Define variable
+    let totalData = [];
+
+    totalData = [];
+    return new Promise((resolve, reject) => {
+        let client = createConnection({ host: HOST, port: PORT }, () => {
+            // 'connect' listener
+            // console.log('connected to server!');
+            // let message = Buffer.from('0017000c485454505f52454645524552002d687474703a2f2f61747765626465762e6d656469746563682e636f6d2f70726f6772616d732f416d732e657865000b52454d4f54455f41444452000e3137322e33302e3139302e313933000b52454d4f54455f484f5354000e3137322e33302e3139302e313933000f485454505f555345525f4147454e5400734d6f7a696c6c612f352e30202857696e646f7773204e542031302e303b2057696e36343b2078363429204170706c655765624b69742f3533372e333620284b48544d4c2c206c696b65204765636b6f29204368726f6d652f36332e302e333233392e313332205361666172692f3533372e3336000b485454505f434f4f4b4945019768756273706f7475746b3d61313033633763316232616239613033333932306539376433376634633537393b205f67613d4741312e322e3631353734363238362e313530383530393836363b205f6769643d4741312e322e313438303439323737392e313531363131333330383b205f5f687374633d3138383835393633362e61313033633763316232616239613033333932306539376433376634633537392e313530383936323436343831322e313531343330393238323730382e313531363133383435343530352e363b205f5f756e616d3d366434336436342d31363039336464653162332d32613961383532622d343b205f5f75746d613d3138383835393633362e3631353734363238362e313530383530393836362e313531363134303437312e313531363134303437312e313b205f5f75746d7a3d3138383835393633362e313531363134303437312e312e312e75746d6373723d28646972656374297c75746d63636e3d28646972656374297c75746d636d643d286e6f6e65293b20706373743d5d475255795b706a413533343438330005485454505300036f6666000b5345525645525f504f52540002383000125345525645525f504f52545f53454355524500013000064e54555345520011776c756f406d656469746563682e636f6d000454595045000c5461736b4564697446696c6500045461736b0007363730363533330006434f4f4b4945000f5d475255795b706a41353334343833000357414300055a5a5a4353000464657363001854455354494e4720544845204e4f544946434154494f4e530007636f6e74616374000e416e646572736f6e2c446f6e6e79000c636f6e7461637470686f6e6500000007686f737072656600000005656d61696c0000000a6e6f74696679747970650000000a6c69766573797374656d00026f6e000a7465737473797374656d00026f6e00086465736374657874000474657374000574736b737400014f', 'hex');
+            client.write(amsPacket);
         });
         client.on('data', (data) => {
             // console.log(`Received ${data.length} bytes of data.`);
@@ -140,7 +183,44 @@ function stringToHex(str) {
     return hex;
 }
 
-function packageAmsSend(task: string, Type: string, text?: string, start?: string, end?: string) {
+function processPutBody(body) {
+    let amsPutBody: string;
+
+    amsPutBody = body;
+
+    return amsPutBody;
+}
+
+
+function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
+    // Define variable
+    let localIp = getLocalIp()[0];
+    let totalParameters: string;
+    let body: string;
+
+    totalParameters = '000A';
+    body = processPutBody(ctx.body);
+
+    let amsPackage: AmsPackagePut = {
+        REMOTE_ADDR: localIp,
+        REMOTE_HOST: localIp,
+        HTTP_USER_AGENT: 'PostmanRuntime/7.1.1',
+        HTTPS: 'off',
+        SERVER_PORT: '80',
+        SERVER_PORT_SECURE: '0',
+        NTUSER: 'WLUO@meditech.com',
+        TYPE: Type,
+        task: task,
+        body: body,
+        AMS_PARAM_TOTAL: totalParameters
+    };
+    console.log(amsPackage);
+    let amsPacket = '';
+    return amsPacket;
+
+}
+
+function getPackageAmsSend(task: string, Type: string, text?: string, start?: string, end?: string) {
     let localIp = getLocalIp()[0];
     let totalParameters: string;
 
@@ -149,7 +229,7 @@ function packageAmsSend(task: string, Type: string, text?: string, start?: strin
     } else {
         totalParameters = '0009';
     }
-    let amsPackage: AmsPackage = {
+    let amsPackage: AmsPackageGet = {
         REMOTE_ADDR: localIp,
         REMOTE_HOST: localIp,
         HTTP_USER_AGENT: 'PostmanRuntime/7.1.1',
@@ -205,7 +285,7 @@ export class AMSApis extends Handler {
                 switch (apiInfo.id) {
                     case 'ams-view._':
                         TYPE = 'TaskGet';
-                        return packageAmsSend(task, TYPE);
+                        return getPackageAmsSend(task, TYPE);
                     case 'ams-view._.customerText._':
                         TYPE = 'TaskText';
                         range = apiInfo.routeParams['range'];
@@ -216,7 +296,7 @@ export class AMSApis extends Handler {
                         }
                         start = range.split('-')[0];
                         end = range.split('-')[1];
-                        return packageAmsSend(task, TYPE, text, start, end);
+                        return getPackageAmsSend(task, TYPE, text, start, end);
                     case 'ams-view._.inhouseText._':
                         TYPE = 'TaskText';
                         range = apiInfo.routeParams['range'];
@@ -227,7 +307,7 @@ export class AMSApis extends Handler {
                         }
                         start = range.split('-')[0];
                         end = range.split('-')[1];
-                        return packageAmsSend(task, TYPE, text, start, end);
+                        return getPackageAmsSend(task, TYPE, text, start, end);
                     default:
                         throw new RestApiRequestError(500);
                 }
@@ -407,7 +487,35 @@ export class AMSApis extends Handler {
      * @inheritDoc
      */
     protected _execute_put(ctx: RequestContext, resolvePromise: (result: Result) => void, rejectPromise: (err: any) => void): void {
-        throw new RestApiRequestError(405);
+        // Define variable
+        let task: string;
+        let TYPE: string;
+        // let body: string;
+
+        Promise.all([ctx.apiInfo])
+            .then(([apiInfo]) => {
+                task = apiInfo.routeParams['Task'];
+                switch (apiInfo.id) {
+                    case 'ams-edit._':
+                        TYPE = 'TaskPut';
+                        return putPackageAmsSend(task, TYPE, ctx);
+                    default:
+                        throw new RestApiRequestError(500);
+                }
+            })
+            .then(p => {
+                return putAmsData(p);
+            })
+            .then(a => {
+                // let jdata = processAmsData(a);
+                const json = {
+                    resource: 'v1/resource/ams-edit/_version/1/',
+                    uri: 'v1/ams-edit/',
+                    task: task
+                };
+                return { json, statusCode: 200 };
+            })
+            .then(resolvePromise, rejectPromise);
     }
 
     /**

@@ -39,6 +39,27 @@ function getAmsData(amsPackage) {
         });
     });
 }
+function putAmsData(amsPacket) {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        const HOST = '172.25.0.2';
+        const PORT = 1022;
+        let totalData = [];
+        totalData = [];
+        return new Promise((resolve, reject) => {
+            let client = net_1.createConnection({ host: HOST, port: PORT }, () => {
+                client.write(amsPacket);
+            });
+            client.on('data', (data) => {
+                totalData.push(data);
+            });
+            client.on('close', () => {
+                let data = Buffer.concat(totalData);
+                client.destroy();
+                resolve(data);
+            });
+        });
+    });
+}
 function processAmsData(buf) {
     let i = 0;
     let j = 0;
@@ -97,7 +118,35 @@ function stringToHex(str) {
     }
     return hex;
 }
-function packageAmsSend(task, Type, text, start, end) {
+function processPutBody(body) {
+    let amsPutBody;
+    amsPutBody = body;
+    return amsPutBody;
+}
+function putPackageAmsSend(task, Type, ctx) {
+    let localIp = getLocalIp()[0];
+    let totalParameters;
+    let body;
+    totalParameters = '000A';
+    body = processPutBody(ctx.body);
+    let amsPackage = {
+        REMOTE_ADDR: localIp,
+        REMOTE_HOST: localIp,
+        HTTP_USER_AGENT: 'PostmanRuntime/7.1.1',
+        HTTPS: 'off',
+        SERVER_PORT: '80',
+        SERVER_PORT_SECURE: '0',
+        NTUSER: 'WLUO@meditech.com',
+        TYPE: Type,
+        task: task,
+        body: body,
+        AMS_PARAM_TOTAL: totalParameters
+    };
+    console.log(amsPackage);
+    let amsPacket = '';
+    return amsPacket;
+}
+function getPackageAmsSend(task, Type, text, start, end) {
     let localIp = getLocalIp()[0];
     let totalParameters;
     if (text) {
@@ -153,7 +202,7 @@ class AMSApis extends Handler_1.Handler {
             switch (apiInfo.id) {
                 case 'ams-view._':
                     TYPE = 'TaskGet';
-                    return packageAmsSend(task, TYPE);
+                    return getPackageAmsSend(task, TYPE);
                 case 'ams-view._.customerText._':
                     TYPE = 'TaskText';
                     range = apiInfo.routeParams['range'];
@@ -165,7 +214,7 @@ class AMSApis extends Handler_1.Handler {
                     }
                     start = range.split('-')[0];
                     end = range.split('-')[1];
-                    return packageAmsSend(task, TYPE, text, start, end);
+                    return getPackageAmsSend(task, TYPE, text, start, end);
                 case 'ams-view._.inhouseText._':
                     TYPE = 'TaskText';
                     range = apiInfo.routeParams['range'];
@@ -177,7 +226,7 @@ class AMSApis extends Handler_1.Handler {
                     }
                     start = range.split('-')[0];
                     end = range.split('-')[1];
-                    return packageAmsSend(task, TYPE, text, start, end);
+                    return getPackageAmsSend(task, TYPE, text, start, end);
                 default:
                     throw new errors_1.RestApiRequestError(500);
             }
@@ -349,7 +398,31 @@ class AMSApis extends Handler_1.Handler {
             .then(resolvePromise, rejectPromise);
     }
     _execute_put(ctx, resolvePromise, rejectPromise) {
-        throw new errors_1.RestApiRequestError(405);
+        let task;
+        let TYPE;
+        Promise.all([ctx.apiInfo])
+            .then(([apiInfo]) => {
+            task = apiInfo.routeParams['Task'];
+            switch (apiInfo.id) {
+                case 'ams-edit._':
+                    TYPE = 'TaskPut';
+                    return putPackageAmsSend(task, TYPE, ctx);
+                default:
+                    throw new errors_1.RestApiRequestError(500);
+            }
+        })
+            .then(p => {
+            return putAmsData(p);
+        })
+            .then(a => {
+            const json = {
+                resource: 'v1/resource/ams-edit/_version/1/',
+                uri: 'v1/ams-edit/',
+                task: task
+            };
+            return { json, statusCode: 200 };
+        })
+            .then(resolvePromise, rejectPromise);
     }
     _execute_patch(ctx, resolvePromise, rejectPromise) {
         throw new errors_1.RestApiRequestError(405);
