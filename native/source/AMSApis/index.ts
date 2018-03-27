@@ -55,7 +55,6 @@ interface AmsPackagePut {
     NTUSER: string;
     TYPE: string;
     task: string;
-    body: string;
     AMS_PARAM_TOTAL: string;
 }
 
@@ -183,23 +182,16 @@ function stringToHex(str) {
     return hex;
 }
 
-function processPutBody(body) {
-    let amsPutBody: string;
-
-    amsPutBody = body;
-
-    return amsPutBody;
-}
-
-
 function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
     // Define variable
     let localIp = getLocalIp()[0];
     let totalParameters: string;
     let body: string;
+    let bodyJson: string[];
 
-    totalParameters = '000A';
-    body = processPutBody(ctx.body);
+    body = JSON.stringify(ctx.body);
+    bodyJson = body.match(/.{1,200}/g);
+    totalParameters = hex16(9 + bodyJson.length);
 
     let amsPackage: AmsPackagePut = {
         REMOTE_ADDR: localIp,
@@ -211,13 +203,28 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
         NTUSER: 'WLUO@meditech.com',
         TYPE: Type,
         task: task,
-        body: body,
         AMS_PARAM_TOTAL: totalParameters
     };
-    console.log(amsPackage);
-    let amsPacket = '';
-    return amsPacket;
 
+    let amsPacket = '';
+    amsPacket += amsPackage.AMS_PARAM_TOTAL;
+    amsPacket += REMOTE_ADDR_L + stringToHex('REMOTE_ADDR') + hex16(amsPackage.REMOTE_ADDR.length) + stringToHex(amsPackage.REMOTE_ADDR);
+    amsPacket += REMOTE_HOST_L + stringToHex('REMOTE_HOST') + hex16(amsPackage.REMOTE_HOST.length) + stringToHex(amsPackage.REMOTE_HOST);
+    amsPacket += HTTP_USER_AGENT_L + stringToHex('HTTP_USER_AGENT') + hex16(amsPackage.HTTP_USER_AGENT.length) + stringToHex(amsPackage.HTTP_USER_AGENT);
+    amsPacket += HTTPS_L + stringToHex('HTTPS') + hex16(amsPackage.HTTPS.length) + stringToHex(amsPackage.HTTPS);
+    amsPacket += SERVER_PORT_L + stringToHex('SERVER_PORT') + hex16(amsPackage.SERVER_PORT.length) + stringToHex(amsPackage.SERVER_PORT);
+    amsPacket += SERVER_PORT_SECURE_L + stringToHex('SERVER_PORT_SECURE') + hex16(amsPackage.SERVER_PORT_SECURE.length) + stringToHex(amsPackage.SERVER_PORT_SECURE);
+    amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
+    amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
+    amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    bodyJson.forEach((element, index) => {
+        let name_L = hex16(('jsonBody' + index).length);
+        let name = stringToHex('jsonBody' + index);
+        let value_L = hex16(element.length);
+        let value = stringToHex(element);
+        amsPacket += name_L + name + value_L + value;
+    });
+    return amsPacket;
 }
 
 function getPackageAmsSend(task: string, Type: string, text?: string, start?: string, end?: string) {
@@ -287,7 +294,7 @@ export class AMSApis extends Handler {
                         TYPE = 'TaskGet';
                         return getPackageAmsSend(task, TYPE);
                     case 'ams-view._.customerText._':
-                        TYPE = 'TaskText';
+                        TYPE = 'TaskGetText';
                         range = apiInfo.routeParams['range'];
                         if (range) {
                             text = 'C';
@@ -298,7 +305,7 @@ export class AMSApis extends Handler {
                         end = range.split('-')[1];
                         return getPackageAmsSend(task, TYPE, text, start, end);
                     case 'ams-view._.inhouseText._':
-                        TYPE = 'TaskText';
+                        TYPE = 'TaskGetText';
                         range = apiInfo.routeParams['range'];
                         if (range) {
                             text = 'I';
