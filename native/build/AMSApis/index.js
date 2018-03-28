@@ -47,7 +47,8 @@ function putAmsData(amsPacket) {
         totalData = [];
         return new Promise((resolve, reject) => {
             let client = net_1.createConnection({ host: HOST, port: PORT }, () => {
-                client.write(amsPacket);
+                let message = Buffer.from(amsPacket, 'hex');
+                client.write(message);
             });
             client.on('data', (data) => {
                 totalData.push(data);
@@ -124,7 +125,7 @@ function putPackageAmsSend(task, Type, ctx) {
     let body;
     let bodyJson;
     body = JSON.stringify(ctx.body);
-    bodyJson = body.match(/.{1,200}/g);
+    bodyJson = body.match(/.{1,100}/g);
     totalParameters = hex16(9 + bodyJson.length);
     let amsPackage = {
         REMOTE_ADDR: localIp,
@@ -139,6 +140,8 @@ function putPackageAmsSend(task, Type, ctx) {
         AMS_PARAM_TOTAL: totalParameters
     };
     let amsPacket = '';
+    let body_L = hex16(body.length);
+    let bodyName_L = hex16(8);
     amsPacket += amsPackage.AMS_PARAM_TOTAL;
     amsPacket += REMOTE_ADDR_L + stringToHex('REMOTE_ADDR') + hex16(amsPackage.REMOTE_ADDR.length) + stringToHex(amsPackage.REMOTE_ADDR);
     amsPacket += REMOTE_HOST_L + stringToHex('REMOTE_HOST') + hex16(amsPackage.REMOTE_HOST.length) + stringToHex(amsPackage.REMOTE_HOST);
@@ -149,13 +152,7 @@ function putPackageAmsSend(task, Type, ctx) {
     amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
     amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
-    bodyJson.forEach((element, index) => {
-        let name_L = hex16(('jsonBody' + index).length);
-        let name = stringToHex('jsonBody' + index);
-        let value_L = hex16(element.length);
-        let value = stringToHex(element);
-        amsPacket += name_L + name + value_L + value;
-    });
+    amsPacket += bodyName_L + stringToHex('jsonBody') + body_L + stringToHex(body);
     return amsPacket;
 }
 function getPackageAmsSend(task, Type, text, start, end) {

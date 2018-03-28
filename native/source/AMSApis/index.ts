@@ -2,16 +2,8 @@ import { RestApiRequestError } from '../../../errors';
 import { Handler } from '../Handler';
 import { Result } from '../../Protocol';
 import { RequestContext } from '../../../RequestContext';
-
-// import * as http from 'http';
-// import * as https from 'https';
 import { createConnection } from 'net';
-// import { resolve } from 'url';
-// import * as net from 'net';
-// import * as StreamBuffers from 'stream-buffers';
-// import * as URL from 'url';
 import * as os from 'os';
-// import { ApiInfo } from '../../../util/Url';
 
 // constant for name length
 const REMOTE_ADDR_L = '000b';
@@ -58,6 +50,7 @@ interface AmsPackagePut {
     AMS_PARAM_TOTAL: string;
 }
 
+// async GET function for sending ams packet and getting response from AMS
 async function getAmsData(amsPackage: string) {
     const HOST = '172.25.0.2';
     const PORT = 1022;
@@ -84,6 +77,7 @@ async function getAmsData(amsPackage: string) {
     });
 }
 
+// async PUT function for sending ams packet and getting response from AMS
 async function putAmsData(amsPacket: string) {
     // Define constant
     const HOST = '172.25.0.2';
@@ -96,8 +90,9 @@ async function putAmsData(amsPacket: string) {
         let client = createConnection({ host: HOST, port: PORT }, () => {
             // 'connect' listener
             // console.log('connected to server!');
-            // let message = Buffer.from('0017000c485454505f52454645524552002d687474703a2f2f61747765626465762e6d656469746563682e636f6d2f70726f6772616d732f416d732e657865000b52454d4f54455f41444452000e3137322e33302e3139302e313933000b52454d4f54455f484f5354000e3137322e33302e3139302e313933000f485454505f555345525f4147454e5400734d6f7a696c6c612f352e30202857696e646f7773204e542031302e303b2057696e36343b2078363429204170706c655765624b69742f3533372e333620284b48544d4c2c206c696b65204765636b6f29204368726f6d652f36332e302e333233392e313332205361666172692f3533372e3336000b485454505f434f4f4b4945019768756273706f7475746b3d61313033633763316232616239613033333932306539376433376634633537393b205f67613d4741312e322e3631353734363238362e313530383530393836363b205f6769643d4741312e322e313438303439323737392e313531363131333330383b205f5f687374633d3138383835393633362e61313033633763316232616239613033333932306539376433376634633537392e313530383936323436343831322e313531343330393238323730382e313531363133383435343530352e363b205f5f756e616d3d366434336436342d31363039336464653162332d32613961383532622d343b205f5f75746d613d3138383835393633362e3631353734363238362e313530383530393836362e313531363134303437312e313531363134303437312e313b205f5f75746d7a3d3138383835393633362e313531363134303437312e312e312e75746d6373723d28646972656374297c75746d63636e3d28646972656374297c75746d636d643d286e6f6e65293b20706373743d5d475255795b706a413533343438330005485454505300036f6666000b5345525645525f504f52540002383000125345525645525f504f52545f53454355524500013000064e54555345520011776c756f406d656469746563682e636f6d000454595045000c5461736b4564697446696c6500045461736b0007363730363533330006434f4f4b4945000f5d475255795b706a41353334343833000357414300055a5a5a4353000464657363001854455354494e4720544845204e4f544946434154494f4e530007636f6e74616374000e416e646572736f6e2c446f6e6e79000c636f6e7461637470686f6e6500000007686f737072656600000005656d61696c0000000a6e6f74696679747970650000000a6c69766573797374656d00026f6e000a7465737473797374656d00026f6e00086465736374657874000474657374000574736b737400014f', 'hex');
-            client.write(amsPacket);
+            let message = Buffer.from(amsPacket, 'hex');
+            // console.log(amsPacket.length);
+            client.write(message);
         });
         client.on('data', (data) => {
             // console.log(`Received ${data.length} bytes of data.`);
@@ -112,6 +107,7 @@ async function putAmsData(amsPacket: string) {
     });
 }
 
+// process AMS buffer response, separate header and body
 function processAmsData(buf) {
     let i = 0;
     let j = 0;
@@ -182,6 +178,16 @@ function stringToHex(str) {
     return hex;
 }
 
+/* // pad index with zero on left
+function pad(num, size) {
+    let s = num + '';
+    while (s.length < size) {
+        s = '0' + s;
+    }
+    return s;
+} */
+
+// setup a AMS PUT packet
 function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
     // Define variable
     let localIp = getLocalIp()[0];
@@ -190,7 +196,7 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
     let bodyJson: string[];
 
     body = JSON.stringify(ctx.body);
-    bodyJson = body.match(/.{1,200}/g);
+    bodyJson = body.match(/.{1,100}/g);
     totalParameters = hex16(9 + bodyJson.length);
 
     let amsPackage: AmsPackagePut = {
@@ -207,6 +213,8 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
     };
 
     let amsPacket = '';
+    let body_L = hex16(body.length);
+    let bodyName_L = hex16(8);
     amsPacket += amsPackage.AMS_PARAM_TOTAL;
     amsPacket += REMOTE_ADDR_L + stringToHex('REMOTE_ADDR') + hex16(amsPackage.REMOTE_ADDR.length) + stringToHex(amsPackage.REMOTE_ADDR);
     amsPacket += REMOTE_HOST_L + stringToHex('REMOTE_HOST') + hex16(amsPackage.REMOTE_HOST.length) + stringToHex(amsPackage.REMOTE_HOST);
@@ -217,16 +225,19 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
     amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
     amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
-    bodyJson.forEach((element, index) => {
-        let name_L = hex16(('jsonBody' + index).length);
-        let name = stringToHex('jsonBody' + index);
-        let value_L = hex16(element.length);
-        let value = stringToHex(element);
-        amsPacket += name_L + name + value_L + value;
-    });
+    /*     bodyJson.forEach((element, index) => {
+            let name_L = hex16(('jsonBody' + pad(index, 5)).length);
+            let name = stringToHex('jsonBody' + pad(index, 5));
+            let value_L = hex16(element.length);
+            let value = stringToHex(element);
+            amsPacket += name_L + name + value_L + value;
+        }); */
+    amsPacket += bodyName_L + stringToHex('jsonBody') + body_L + stringToHex(body);
+
     return amsPacket;
 }
 
+// setup a AMS GET packet
 function getPackageAmsSend(task: string, Type: string, text?: string, start?: string, end?: string) {
     let localIp = getLocalIp()[0];
     let totalParameters: string;
@@ -497,7 +508,6 @@ export class AMSApis extends Handler {
         // Define variable
         let task: string;
         let TYPE: string;
-        // let body: string;
 
         Promise.all([ctx.apiInfo])
             .then(([apiInfo]) => {
