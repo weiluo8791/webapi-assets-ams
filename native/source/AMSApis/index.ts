@@ -5,6 +5,15 @@ import { RequestContext } from '../../../RequestContext';
 import { createConnection } from 'net';
 import * as os from 'os';
 
+import * as path from 'path';
+import JsonPatch from 'fast-json-patch';
+import * as StringUtil from '../../../util/String';
+import * as FsUtil from '../../../util/Filesystem';
+import { CacheClass, LoadResult, del as deleteCache, update as updateCache, get as getCache } from '../../../Cache';
+import { resolve as resolveModel } from '../../../models/Model';
+import { TYPEURI as resourceTypeUri, Resource } from '../../../models/v1/resource';
+
+
 // constant for name length
 const REMOTE_ADDR_L = '000b';
 const REMOTE_HOST_L = '000b';
@@ -14,7 +23,9 @@ const SERVER_PORT_L = '000b';
 const SERVER_PORT_SECURE_L = '0012';
 const NTUSER_L = '0006';
 const TYPE_L = '0004';
-const task_L = '0004';
+const Task_L = '0004';
+const WAC_L = '0003';
+const COOKIE_L = '0006';
 const text_L = '0004';
 const start_L = '0005';
 const end_L = '0003';
@@ -46,6 +57,8 @@ interface AmsPackagePut {
     SERVER_PORT_SECURE: string;
     NTUSER: string;
     TYPE: string;
+    WAC: string;
+    COOKIE: string;
     task: string;
     AMS_PARAM_TOTAL: string;
 }
@@ -62,6 +75,7 @@ async function getAmsData(amsPackage: string) {
             // 'connect' listener
             // console.log('connected to server!');
             let message = Buffer.from(amsPackage, 'hex');
+            // console.log(message.toString());
             client.write(message);
         });
         client.on('data', (data) => {
@@ -91,7 +105,7 @@ async function putAmsData(amsPacket: string) {
             // 'connect' listener
             // console.log('connected to server!');
             let message = Buffer.from(amsPacket, 'hex');
-            // console.log(amsPacket.length);
+            // console.log(message.toString());
             client.write(message);
         });
         client.on('data', (data) => {
@@ -102,6 +116,7 @@ async function putAmsData(amsPacket: string) {
             // console.log('disconnected from server');
             let data = Buffer.concat(totalData);
             client.destroy();
+            // console.log(data.toString());
             resolve(data);
         });
     });
@@ -197,7 +212,8 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
 
     body = JSON.stringify(ctx.body);
     bodyJson = body.match(/.{1,100}/g);
-    totalParameters = hex16(9 + bodyJson.length);
+    // totalParameters = hex16(11 + bodyJson.length);
+    totalParameters = hex16(12);
 
     let amsPackage: AmsPackagePut = {
         REMOTE_ADDR: localIp,
@@ -206,8 +222,11 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        NTUSER: 'WLUO@meditech.com',
+        // NTUSER: 'WLUO@meditech.com',
+        NTUSER: 'ROGERS',
         TYPE: Type,
+        WAC: 'ZZZ',
+        COOKIE: 'IcoGi]jd]559825',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -224,7 +243,9 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
     amsPacket += SERVER_PORT_SECURE_L + stringToHex('SERVER_PORT_SECURE') + hex16(amsPackage.SERVER_PORT_SECURE.length) + stringToHex(amsPackage.SERVER_PORT_SECURE);
     amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
-    amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    amsPacket += Task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    amsPacket += WAC_L + stringToHex('WAC') + hex16(amsPackage.WAC.length) + stringToHex(amsPackage.WAC);
+    amsPacket += COOKIE_L + stringToHex('COOKIE') + hex16(amsPackage.COOKIE.length) + stringToHex(amsPackage.COOKIE);
     /*     bodyJson.forEach((element, index) => {
             let name_L = hex16(('jsonBody' + pad(index, 5)).length);
             let name = stringToHex('jsonBody' + pad(index, 5));
@@ -254,7 +275,7 @@ function getPackageAmsSend(task: string, Type: string, text?: string, start?: st
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        NTUSER: 'WLUO@meditech.com',
+        NTUSER: 'ROGERS',
         TYPE: Type,
         task: task,
         text: text,
@@ -273,7 +294,7 @@ function getPackageAmsSend(task: string, Type: string, text?: string, start?: st
     amsPacket += SERVER_PORT_SECURE_L + stringToHex('SERVER_PORT_SECURE') + hex16(amsPackage.SERVER_PORT_SECURE.length) + stringToHex(amsPackage.SERVER_PORT_SECURE);
     amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
-    amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    amsPacket += Task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
 
     if (text) {
         amsPacket += text_L + stringToHex('text') + hex16(amsPackage.text.length) + stringToHex(amsPackage.text);
@@ -284,7 +305,33 @@ function getPackageAmsSend(task: string, Type: string, text?: string, start?: st
     return amsPacket;
 }
 
-export class AMSApis extends Handler {
+
+
+export abstract class AMSApis extends Handler {
+
+
+    protected abstract dataPath: string;
+    protected abstract systemGeneratedId: boolean;
+    protected abstract resourceUri: string;
+    protected abstract resourceListUri: string;
+    protected abstract formUri(id: string): string;
+
+    protected preCommitHook(json: any, ctx: RequestContext): Promise<void> {
+        return Promise.resolve();
+    }
+
+    protected postCommitHook(json: any, ctx: RequestContext): Promise<void> {
+        return Promise.resolve();
+    }
+
+    protected preDeleteHook(id: string, ctx: RequestContext): Promise<void> {
+        return Promise.resolve();
+    }
+
+    protected postDeleteHook(id: string, ctx: RequestContext): Promise<void> {
+        return Promise.resolve();
+    }
+
     /**
      * @inheritDoc
      */
@@ -335,7 +382,6 @@ export class AMSApis extends Handler {
             })
             .then(a => {
                 let jdata = processAmsData(a);
-
                 if (text === 'C') {
                     if (jdata['errors']) {
                         const errors = {
@@ -461,9 +507,24 @@ export class AMSApis extends Handler {
                             'task.received.by': jdata['task.received.by'],
                             'task.application.specialist': jdata['task.application.specialist'],
                             'task.other.staff': jdata['task.other.staff'],
-                            'task.last.edit': jdata['task.last.edit']
+                            'task.last.edit': jdata['task.last.edit'],
+                            'task.category': jdata['task.category'],
+                            'ams.task.target.date': jdata['ams.task.target.date'],
+                            'task.support.group': jdata['task.support.group']
                         };
                         // optional fields
+                        if (jdata['ams.task.trap.file']) {
+                            json['ams.task.trap.file'] = jdata['ams.task.trap.file'];
+                        }
+                        if (jdata['ams.task.shift.date']) {
+                            json['ams.task.shift.date'] = jdata['ams.task.shift.date'];
+                        }
+                        if (jdata['task.shift']) {
+                            json['task.shift'] = jdata['task.shift'];
+                        }
+                        if (jdata['task.assigned.to']) {
+                            json['task.assigned.to'] = jdata['task.assigned.to'];
+                        }
                         if (jdata['task.status.completed.date']) {
                             json['task.status.completed.date'] = jdata['task.status.completed.date'];
                         }
@@ -482,6 +543,15 @@ export class AMSApis extends Handler {
                         if (jdata['related.issues']) {
                             json['related.issues'] = jdata['related.issues'];
                         }
+                        if (jdata['task.keywords']) {
+                            json['task.keywords'] = jdata['task.keywords'];
+                        }
+                        if (jdata['programs']) {
+                            json['programs'] = jdata['programs'];
+                        }
+                        if (jdata['development']) {
+                            json['development'] = jdata['development'];
+                        }
                         if (jdata['web.uploaded.files']) {
                             json['web.uploaded.files'] = jdata['web.uploaded.files'];
                         }
@@ -493,6 +563,9 @@ export class AMSApis extends Handler {
                         }
                         if (jdata['warnings']) {
                             json['warnings'] = jdata['warnings'];
+                        }
+                        if (jdata['warning.text']) {
+                            json['warning.text'] = jdata['warning.text'];
                         }
                         return { json, statusCode: 200 };
                     }
@@ -511,10 +584,11 @@ export class AMSApis extends Handler {
 
         Promise.all([ctx.apiInfo])
             .then(([apiInfo]) => {
-                task = apiInfo.routeParams['Task'];
+                task = apiInfo.routeParams['task'];
                 switch (apiInfo.id) {
                     case 'ams-edit._':
                         TYPE = 'TaskPut';
+
                         return putPackageAmsSend(task, TYPE, ctx);
                     default:
                         throw new RestApiRequestError(500);
@@ -524,7 +598,7 @@ export class AMSApis extends Handler {
                 return putAmsData(p);
             })
             .then(a => {
-                // let jdata = processAmsData(a);
+                processAmsData(a);
                 const json = {
                     resource: 'v1/resource/ams-edit/_version/1/',
                     uri: 'v1/ams-edit/',
@@ -539,24 +613,48 @@ export class AMSApis extends Handler {
      * @inheritDoc
      */
     protected _execute_patch(ctx: RequestContext, resolvePromise: (result: Result) => void, rejectPromise: (err: any) => void): void {
+        Promise.all([ctx.apiInfo])
+            .then(([apiInfo]) => {
 
-        throw new RestApiRequestError(405);
+                return this.patch(apiInfo.routeParams['Task'], ctx.body, ctx.headers['if-match'], ctx);
+            })
+            .then(json => {
+                return { statusCode: 200, json };
+            })
+            .then(resolvePromise)
+            .catch(rejectPromise);
+
+        // throw new RestApiRequestError(405);
     }
 
     /**
      * @inheritDoc
      */
     protected _execute_delete(ctx: RequestContext, resolvePromise: (result: Result) => void, rejectPromise: (err: any) => void): void {
+        Promise.all([ctx.apiInfo])
+            .then(([apiInfo]) => {
 
-        throw new RestApiRequestError(405);
+                return this.delete(apiInfo.routeParams['id'], ctx);
+            })
+            .then(json => {
+                return { statusCode: 204 };
+            })
+            .then(resolvePromise)
+            .catch(rejectPromise);
+        // throw new RestApiRequestError(405);
     }
 
     /**
      * @inheritDoc
      */
     protected _execute_post(ctx: RequestContext, resolvePromise: (result: Result) => void, rejectPromise: (err: any) => void): void {
-
-        throw new RestApiRequestError(405);
+        this.create(ctx.body, ctx)
+            .then(json => {
+                return { statusCode: 200, json };
+            })
+            .then(resolvePromise)
+            .catch(rejectPromise);
+        // throw new RestApiRequestError(405);
     }
 
     /**
@@ -566,6 +664,123 @@ export class AMSApis extends Handler {
 
         throw new RestApiRequestError(405);
     }
+
+    private patch(id: string, patch: JsonPatch.Operation[], ifMatch: string, ctx: RequestContext): Promise<any> {
+
+        patch.forEach(instruction => {
+
+            switch (instruction.path) {
+                case '/task':
+                case '/resource':
+                    throw new RestApiRequestError(400);
+            }
+        });
+
+        return this.find(id, ctx)
+            .then(json => {
+                if (json.etag !== ifMatch) {
+                    throw new RestApiRequestError(409);
+                }
+                JsonPatch.applyPatch(json, patch);
+                return this.save(json, ctx);
+            });
+    }
+
+    protected filePath(id: string) {
+
+        const file = path.normalize(path.join(this.dataPath, encodeURIComponent(id) + '.json'));
+
+        if (!file.startsWith(this.dataPath)) {
+            throw new RestApiRequestError(400);
+        }
+
+        return file;
+    }
+    private save<T extends { id: string, uri: string }>(json: T, ctx: RequestContext): Promise<T> {
+
+        const file = this.filePath(json.id);
+        const uri = json.uri = this.formUri(json.id);
+        StringUtil.applyEtag(json);
+
+        return FsUtil.directoryExists(this.dataPath)
+            .then((exists) => {
+
+                if (!exists) {
+                    return FsUtil.mkdir(this.dataPath);
+                }
+            })
+            .then(() => this.preCommitHook(json, ctx))
+            .then(() => FsUtil.writeJson(file, json))
+            .then(() => this.getResourceCacheSettings(ctx))
+            .then(cacheSettings => updateCache(CacheClass.Application, uri, {
+                update: true,
+                data: json,
+                tcfOverride: cacheSettings.getTimeConsideredFresh(),
+                ttlOverride: cacheSettings.getTimeToLive()
+            }, ctx))
+            .then(() => this.postCommitHook(json, ctx))
+            .then(() => json);
+    }
+
+    private create<T extends { id: string, uri: string, etag: string }>(json: T, ctx: RequestContext): Promise<T> {
+
+        const id = json.id = this.systemGeneratedId ? StringUtil.uuid() : json.id;
+
+        return this.find(id, ctx)
+            .then(current => {
+                throw new RestApiRequestError(409);
+            })
+            .catch(err => {
+                if (err instanceof RestApiRequestError && err.responseCode === 404) {
+                    return this.save(json, ctx);
+                }
+                throw err;
+            });
+    }
+
+    private getResourceCacheSettings(ctx: RequestContext) {
+        return resolveModel(this.resourceUri, ctx)
+            .then((resource: Resource) => {
+                if (!resource.isTypeOf(resourceTypeUri)) {
+                    throw new Error('resourceUri provided is not a resource.');
+                }
+
+                return resource.cache;
+            });
+    }
+
+    private find(id: string, ctx: RequestContext) {
+
+        const file = this.filePath(id);
+
+        return getCache(CacheClass.Application, this.formUri(id), ctx, (): Promise<LoadResult> => {
+
+            return FsUtil.readJson(file)
+                .catch(err => {
+                    throw new RestApiRequestError(404);
+                })
+                .then(json => {
+                    return this.getResourceCacheSettings(ctx)
+                        .then(cacheSettings => {
+                            return {
+                                update: true,
+                                data: json,
+                                tcfOverride: cacheSettings.getTimeConsideredFresh(),
+                                ttlOverride: cacheSettings.getTimeToLive()
+                            };
+                        });
+                });
+        });
+    }
+
+    private delete(id: string, ctx: RequestContext) {
+
+        return this.preDeleteHook(id, ctx)
+            .then(() => FsUtil.unlink(this.filePath(id)))
+            .then(() => deleteCache(CacheClass.Application, this.formUri(id), ctx))
+            .then(() => this.postDeleteHook(id, ctx));
+    }
+
 }
 
 export default AMSApis;

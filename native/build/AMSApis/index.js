@@ -5,6 +5,13 @@ const errors_1 = require("../../../errors");
 const Handler_1 = require("../Handler");
 const net_1 = require("net");
 const os = require("os");
+const path = require("path");
+const fast_json_patch_1 = require("fast-json-patch");
+const StringUtil = require("../../../util/String");
+const FsUtil = require("../../../util/Filesystem");
+const Cache_1 = require("../../../Cache");
+const Model_1 = require("../../../models/Model");
+const resource_1 = require("../../../models/v1/resource");
 const REMOTE_ADDR_L = '000b';
 const REMOTE_HOST_L = '000b';
 const HTTP_USER_AGENT_L = '000f';
@@ -13,7 +20,9 @@ const SERVER_PORT_L = '000b';
 const SERVER_PORT_SECURE_L = '0012';
 const NTUSER_L = '0006';
 const TYPE_L = '0004';
-const task_L = '0004';
+const Task_L = '0004';
+const WAC_L = '0003';
+const COOKIE_L = '0006';
 const text_L = '0004';
 const start_L = '0005';
 const end_L = '0003';
@@ -126,7 +135,7 @@ function putPackageAmsSend(task, Type, ctx) {
     let bodyJson;
     body = JSON.stringify(ctx.body);
     bodyJson = body.match(/.{1,100}/g);
-    totalParameters = hex16(9 + bodyJson.length);
+    totalParameters = hex16(12);
     let amsPackage = {
         REMOTE_ADDR: localIp,
         REMOTE_HOST: localIp,
@@ -134,8 +143,10 @@ function putPackageAmsSend(task, Type, ctx) {
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        NTUSER: 'WLUO@meditech.com',
+        NTUSER: 'ROGERS',
         TYPE: Type,
+        WAC: 'ZZZ',
+        COOKIE: 'IcoGi]jd]559825',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -151,7 +162,9 @@ function putPackageAmsSend(task, Type, ctx) {
     amsPacket += SERVER_PORT_SECURE_L + stringToHex('SERVER_PORT_SECURE') + hex16(amsPackage.SERVER_PORT_SECURE.length) + stringToHex(amsPackage.SERVER_PORT_SECURE);
     amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
-    amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    amsPacket += Task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    amsPacket += WAC_L + stringToHex('WAC') + hex16(amsPackage.WAC.length) + stringToHex(amsPackage.WAC);
+    amsPacket += COOKIE_L + stringToHex('COOKIE') + hex16(amsPackage.COOKIE.length) + stringToHex(amsPackage.COOKIE);
     amsPacket += bodyName_L + stringToHex('jsonBody') + body_L + stringToHex(body);
     return amsPacket;
 }
@@ -171,7 +184,7 @@ function getPackageAmsSend(task, Type, text, start, end) {
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        NTUSER: 'WLUO@meditech.com',
+        NTUSER: 'ROGERS',
         TYPE: Type,
         task: task,
         text: text,
@@ -189,7 +202,7 @@ function getPackageAmsSend(task, Type, text, start, end) {
     amsPacket += SERVER_PORT_SECURE_L + stringToHex('SERVER_PORT_SECURE') + hex16(amsPackage.SERVER_PORT_SECURE.length) + stringToHex(amsPackage.SERVER_PORT_SECURE);
     amsPacket += NTUSER_L + stringToHex('NTUSER') + hex16(amsPackage.NTUSER.length) + stringToHex(amsPackage.NTUSER);
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
-    amsPacket += task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
+    amsPacket += Task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
     if (text) {
         amsPacket += text_L + stringToHex('text') + hex16(amsPackage.text.length) + stringToHex(amsPackage.text);
         amsPacket += start_L + stringToHex('start') + hex16(amsPackage.start.length) + stringToHex(amsPackage.start);
@@ -198,6 +211,18 @@ function getPackageAmsSend(task, Type, text, start, end) {
     return amsPacket;
 }
 class AMSApis extends Handler_1.Handler {
+    preCommitHook(json, ctx) {
+        return Promise.resolve();
+    }
+    postCommitHook(json, ctx) {
+        return Promise.resolve();
+    }
+    preDeleteHook(id, ctx) {
+        return Promise.resolve();
+    }
+    postDeleteHook(id, ctx) {
+        return Promise.resolve();
+    }
     _execute_get(ctx, resolvePromise, rejectPromise) {
         let task;
         let range;
@@ -368,8 +393,23 @@ class AMSApis extends Handler_1.Handler {
                         'task.received.by': jdata['task.received.by'],
                         'task.application.specialist': jdata['task.application.specialist'],
                         'task.other.staff': jdata['task.other.staff'],
-                        'task.last.edit': jdata['task.last.edit']
+                        'task.last.edit': jdata['task.last.edit'],
+                        'task.category': jdata['task.category'],
+                        'ams.task.target.date': jdata['ams.task.target.date'],
+                        'task.support.group': jdata['task.support.group']
                     };
+                    if (jdata['ams.task.trap.file']) {
+                        json['ams.task.trap.file'] = jdata['ams.task.trap.file'];
+                    }
+                    if (jdata['ams.task.shift.date']) {
+                        json['ams.task.shift.date'] = jdata['ams.task.shift.date'];
+                    }
+                    if (jdata['task.shift']) {
+                        json['task.shift'] = jdata['task.shift'];
+                    }
+                    if (jdata['task.assigned.to']) {
+                        json['task.assigned.to'] = jdata['task.assigned.to'];
+                    }
                     if (jdata['task.status.completed.date']) {
                         json['task.status.completed.date'] = jdata['task.status.completed.date'];
                     }
@@ -388,6 +428,15 @@ class AMSApis extends Handler_1.Handler {
                     if (jdata['related.issues']) {
                         json['related.issues'] = jdata['related.issues'];
                     }
+                    if (jdata['task.keywords']) {
+                        json['task.keywords'] = jdata['task.keywords'];
+                    }
+                    if (jdata['programs']) {
+                        json['programs'] = jdata['programs'];
+                    }
+                    if (jdata['development']) {
+                        json['development'] = jdata['development'];
+                    }
                     if (jdata['web.uploaded.files']) {
                         json['web.uploaded.files'] = jdata['web.uploaded.files'];
                     }
@@ -400,6 +449,9 @@ class AMSApis extends Handler_1.Handler {
                     if (jdata['warnings']) {
                         json['warnings'] = jdata['warnings'];
                     }
+                    if (jdata['warning.text']) {
+                        json['warning.text'] = jdata['warning.text'];
+                    }
                     return { json, statusCode: 200 };
                 }
             }
@@ -411,7 +463,7 @@ class AMSApis extends Handler_1.Handler {
         let TYPE;
         Promise.all([ctx.apiInfo])
             .then(([apiInfo]) => {
-            task = apiInfo.routeParams['Task'];
+            task = apiInfo.routeParams['task'];
             switch (apiInfo.id) {
                 case 'ams-edit._':
                     TYPE = 'TaskPut';
@@ -424,6 +476,7 @@ class AMSApis extends Handler_1.Handler {
             return putAmsData(p);
         })
             .then(a => {
+            processAmsData(a);
             const json = {
                 resource: 'v1/resource/ams-edit/_version/1/',
                 uri: 'v1/ams-edit/',
@@ -434,16 +487,131 @@ class AMSApis extends Handler_1.Handler {
             .then(resolvePromise, rejectPromise);
     }
     _execute_patch(ctx, resolvePromise, rejectPromise) {
-        throw new errors_1.RestApiRequestError(405);
+        Promise.all([ctx.apiInfo])
+            .then(([apiInfo]) => {
+            return this.patch(apiInfo.routeParams['Task'], ctx.body, ctx.headers['if-match'], ctx);
+        })
+            .then(json => {
+            return { statusCode: 200, json };
+        })
+            .then(resolvePromise)
+            .catch(rejectPromise);
     }
     _execute_delete(ctx, resolvePromise, rejectPromise) {
-        throw new errors_1.RestApiRequestError(405);
+        Promise.all([ctx.apiInfo])
+            .then(([apiInfo]) => {
+            return this.delete(apiInfo.routeParams['id'], ctx);
+        })
+            .then(json => {
+            return { statusCode: 204 };
+        })
+            .then(resolvePromise)
+            .catch(rejectPromise);
     }
     _execute_post(ctx, resolvePromise, rejectPromise) {
-        throw new errors_1.RestApiRequestError(405);
+        this.create(ctx.body, ctx)
+            .then(json => {
+            return { statusCode: 200, json };
+        })
+            .then(resolvePromise)
+            .catch(rejectPromise);
     }
     _execute_head(dctx, resolvePromise, rejectPromise) {
         throw new errors_1.RestApiRequestError(405);
+    }
+    patch(id, patch, ifMatch, ctx) {
+        patch.forEach(instruction => {
+            switch (instruction.path) {
+                case '/task':
+                case '/resource':
+                    throw new errors_1.RestApiRequestError(400);
+            }
+        });
+        return this.find(id, ctx)
+            .then(json => {
+            if (json.etag !== ifMatch) {
+                throw new errors_1.RestApiRequestError(409);
+            }
+            fast_json_patch_1.default.applyPatch(json, patch);
+            return this.save(json, ctx);
+        });
+    }
+    filePath(id) {
+        const file = path.normalize(path.join(this.dataPath, encodeURIComponent(id) + '.json'));
+        if (!file.startsWith(this.dataPath)) {
+            throw new errors_1.RestApiRequestError(400);
+        }
+        return file;
+    }
+    save(json, ctx) {
+        const file = this.filePath(json.id);
+        const uri = json.uri = this.formUri(json.id);
+        StringUtil.applyEtag(json);
+        return FsUtil.directoryExists(this.dataPath)
+            .then((exists) => {
+            if (!exists) {
+                return FsUtil.mkdir(this.dataPath);
+            }
+        })
+            .then(() => this.preCommitHook(json, ctx))
+            .then(() => FsUtil.writeJson(file, json))
+            .then(() => this.getResourceCacheSettings(ctx))
+            .then(cacheSettings => Cache_1.update(Cache_1.CacheClass.Application, uri, {
+            update: true,
+            data: json,
+            tcfOverride: cacheSettings.getTimeConsideredFresh(),
+            ttlOverride: cacheSettings.getTimeToLive()
+        }, ctx))
+            .then(() => this.postCommitHook(json, ctx))
+            .then(() => json);
+    }
+    create(json, ctx) {
+        const id = json.id = this.systemGeneratedId ? StringUtil.uuid() : json.id;
+        return this.find(id, ctx)
+            .then(current => {
+            throw new errors_1.RestApiRequestError(409);
+        })
+            .catch(err => {
+            if (err instanceof errors_1.RestApiRequestError && err.responseCode === 404) {
+                return this.save(json, ctx);
+            }
+            throw err;
+        });
+    }
+    getResourceCacheSettings(ctx) {
+        return Model_1.resolve(this.resourceUri, ctx)
+            .then((resource) => {
+            if (!resource.isTypeOf(resource_1.TYPEURI)) {
+                throw new Error('resourceUri provided is not a resource.');
+            }
+            return resource.cache;
+        });
+    }
+    find(id, ctx) {
+        const file = this.filePath(id);
+        return Cache_1.get(Cache_1.CacheClass.Application, this.formUri(id), ctx, () => {
+            return FsUtil.readJson(file)
+                .catch(err => {
+                throw new errors_1.RestApiRequestError(404);
+            })
+                .then(json => {
+                return this.getResourceCacheSettings(ctx)
+                    .then(cacheSettings => {
+                    return {
+                        update: true,
+                        data: json,
+                        tcfOverride: cacheSettings.getTimeConsideredFresh(),
+                        ttlOverride: cacheSettings.getTimeToLive()
+                    };
+                });
+            });
+        });
+    }
+    delete(id, ctx) {
+        return this.preDeleteHook(id, ctx)
+            .then(() => FsUtil.unlink(this.filePath(id)))
+            .then(() => Cache_1.del(Cache_1.CacheClass.Application, this.formUri(id), ctx))
+            .then(() => this.postDeleteHook(id, ctx));
     }
 }
 exports.AMSApis = AMSApis;
