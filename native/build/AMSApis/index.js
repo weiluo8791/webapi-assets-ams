@@ -65,6 +65,7 @@ function putAmsData(amsPacket) {
             client.on('close', () => {
                 let data = Buffer.concat(totalData);
                 client.destroy();
+                console.log(data.toString());
                 resolve(data);
             });
         });
@@ -146,7 +147,7 @@ function putPackageAmsSend(task, Type, ctx) {
         NTUSER: 'ROGERS',
         TYPE: Type,
         WAC: 'ZZZ',
-        COOKIE: 'IcoGi]jd]559825',
+        COOKIE: 'RgzB[NzPP563602',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -241,25 +242,29 @@ class AMSApis extends Handler_1.Handler {
                     TYPE = 'TaskGetText';
                     range = apiInfo.routeParams['range'];
                     if (range) {
+                        start = range.split('-')[0];
+                        end = range.split('-')[1];
+                    }
+                    if (start && end) {
                         text = 'C';
                     }
                     else {
                         text = 'TC';
                     }
-                    start = range.split('-')[0];
-                    end = range.split('-')[1];
                     return getPackageAmsSend(task, TYPE, text, start, end);
                 case 'ams-view._.inhouseText._':
                     TYPE = 'TaskGetText';
                     range = apiInfo.routeParams['range'];
                     if (range) {
+                        start = range.split('-')[0];
+                        end = range.split('-')[1];
+                    }
+                    if (start && end) {
                         text = 'I';
                     }
                     else {
                         text = 'TI';
                     }
-                    start = range.split('-')[0];
-                    end = range.split('-')[1];
                     return getPackageAmsSend(task, TYPE, text, start, end);
                 default:
                     throw new errors_1.RestApiRequestError(500);
@@ -271,12 +276,14 @@ class AMSApis extends Handler_1.Handler {
             .then(a => {
             let jdata = processAmsData(a);
             if (text === 'C') {
-                if (jdata['errors']) {
+                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/customerText/_version/1/',
                         uri: 'v1/customerText/',
                         task: task,
-                        errors: jdata['errors']
+                        errors: jdata['errors'],
+                        'error.code': jdata['error.code'],
+                        'error.message': jdata['error.message']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -294,12 +301,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (text === 'I') {
-                if (jdata['errors']) {
+                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/inhouseText/_version/1/',
                         uri: 'v1/inhouseText/',
                         task: task,
-                        errors: jdata['errors']
+                        errors: jdata['errors'],
+                        'error.code': jdata['error.code'],
+                        'error.message': jdata['error.message']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -317,19 +326,21 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (text === 'TC') {
-                if (jdata['errors']) {
+                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
-                        resource: 'v1/resource/inhouseText/_version/1/',
-                        uri: 'v1/inhouseText/',
+                        resource: 'v1/resource/customerText/_version/1/',
+                        uri: 'v1/customerText/',
                         task: task,
-                        errors: jdata['errors']
+                        errors: jdata['errors'],
+                        'error.code': jdata['error.code'],
+                        'error.message': jdata['error.message']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
                 else {
                     const json = {
-                        resource: 'v1/resource/inhouseText/_version/1/',
-                        uri: 'v1/inhouseText/',
+                        resource: 'v1/resource/customerText/_version/1/',
+                        uri: 'v1/customerText/',
                         task: task,
                         text: text,
                         count: jdata['count']
@@ -338,12 +349,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (text === 'TI') {
-                if (jdata['errors']) {
+                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/inhouseText/_version/1/',
                         uri: 'v1/inhouseText/',
                         task: task,
-                        errors: jdata['errors']
+                        errors: jdata['errors'],
+                        'error.code': jdata['error.code'],
+                        'error.message': jdata['error.message']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -359,12 +372,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else {
-                if (jdata['errors']) {
+                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/ams-view/_version/1/',
                         uri: 'v1/ams-view/',
                         task: task,
-                        errors: jdata['errors']
+                        errors: jdata['errors'],
+                        'error.code': jdata['error.code'],
+                        'error.message': jdata['error.message']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }

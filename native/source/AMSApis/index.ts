@@ -116,7 +116,7 @@ async function putAmsData(amsPacket: string) {
             // console.log('disconnected from server');
             let data = Buffer.concat(totalData);
             client.destroy();
-            // console.log(data.toString());
+            console.log(data.toString());
             resolve(data);
         });
     });
@@ -226,7 +226,7 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
         NTUSER: 'ROGERS',
         TYPE: Type,
         WAC: 'ZZZ',
-        COOKIE: 'IcoGi]jd]559825',
+        COOKIE: 'RgzB[NzPP563602',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -355,23 +355,27 @@ export abstract class AMSApis extends Handler {
                         TYPE = 'TaskGetText';
                         range = apiInfo.routeParams['range'];
                         if (range) {
+                            start = range.split('-')[0];
+                            end = range.split('-')[1];
+                        }
+                        if (start && end) {
                             text = 'C';
                         } else {
                             text = 'TC';
                         }
-                        start = range.split('-')[0];
-                        end = range.split('-')[1];
                         return getPackageAmsSend(task, TYPE, text, start, end);
                     case 'ams-view._.inhouseText._':
                         TYPE = 'TaskGetText';
                         range = apiInfo.routeParams['range'];
                         if (range) {
+                            start = range.split('-')[0];
+                            end = range.split('-')[1];
+                        }
+                        if (start && end) {
                             text = 'I';
                         } else {
                             text = 'TI';
                         }
-                        start = range.split('-')[0];
-                        end = range.split('-')[1];
                         return getPackageAmsSend(task, TYPE, text, start, end);
                     default:
                         throw new RestApiRequestError(500);
@@ -431,8 +435,8 @@ export abstract class AMSApis extends Handler {
                 } else if (text === 'TC') {
                     if (jdata['errors']) {
                         const errors = {
-                            resource: 'v1/resource/inhouseText/_version/1/',
-                            uri: 'v1/inhouseText/',
+                            resource: 'v1/resource/customerText/_version/1/',
+                            uri: 'v1/customerText/',
                             task: task,
                             errors: jdata['errors']
                         };
@@ -441,8 +445,8 @@ export abstract class AMSApis extends Handler {
                     } else {
                         // require fields
                         const json = {
-                            resource: 'v1/resource/inhouseText/_version/1/',
-                            uri: 'v1/inhouseText/',
+                            resource: 'v1/resource/customerText/_version/1/',
+                            uri: 'v1/customerText/',
                             task: task,
                             text: text,
                             count: jdata['count']
