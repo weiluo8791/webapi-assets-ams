@@ -65,7 +65,6 @@ function putAmsData(amsPacket) {
             client.on('close', () => {
                 let data = Buffer.concat(totalData);
                 client.destroy();
-                console.log(data.toString());
                 resolve(data);
             });
         });
@@ -147,7 +146,7 @@ function putPackageAmsSend(task, Type, ctx) {
         NTUSER: 'ROGERS',
         TYPE: Type,
         WAC: 'ZZZ',
-        COOKIE: 'RgzB[NzPP563602',
+        COOKIE: 'PxNgwB[Kj565146',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -491,13 +490,30 @@ class AMSApis extends Handler_1.Handler {
             return putAmsData(p);
         })
             .then(a => {
-            processAmsData(a);
-            const json = {
-                resource: 'v1/resource/ams-edit/_version/1/',
-                uri: 'v1/ams-edit/',
-                task: task
-            };
-            return { json, statusCode: 200 };
+            let jdata = processAmsData(a);
+            if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                const errors = {
+                    resource: 'v1/resource/ams-edit/_version/1/',
+                    uri: 'v1/ams-edit/',
+                    task: task,
+                    errors: jdata['errors'],
+                    'error.code': jdata['error.code'],
+                    'error.message': jdata['error.message']
+                };
+                throw new errors_1.RestApiRequestError(400, '', {}, errors);
+            }
+            else {
+                const json = {
+                    resource: 'v1/resource/ams-edit/_version/1/',
+                    uri: 'v1/ams-edit/',
+                    task: task,
+                    site: jdata.site,
+                    module: jdata.module,
+                    NTUSER: jdata.NTUSER,
+                    'task.last.edit': jdata['task.last.edit']
+                };
+                return { json, statusCode: 200 };
+            }
         })
             .then(resolvePromise, rejectPromise);
     }

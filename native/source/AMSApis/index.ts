@@ -86,6 +86,7 @@ async function getAmsData(amsPackage: string) {
             // console.log('disconnected from server');
             let data = Buffer.concat(totalData);
             client.destroy();
+            // console.log(data.toString());
             resolve(data);
         });
     });
@@ -116,7 +117,7 @@ async function putAmsData(amsPacket: string) {
             // console.log('disconnected from server');
             let data = Buffer.concat(totalData);
             client.destroy();
-            console.log(data.toString());
+            // console.log(data.toString());
             resolve(data);
         });
     });
@@ -222,11 +223,10 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        // NTUSER: 'WLUO@meditech.com',
         NTUSER: 'ROGERS',
         TYPE: Type,
         WAC: 'ZZZ',
-        COOKIE: 'RgzB[NzPP563602',
+        COOKIE: 'PxNgwB[Kj565146',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -387,12 +387,14 @@ export abstract class AMSApis extends Handler {
             .then(a => {
                 let jdata = processAmsData(a);
                 if (text === 'C') {
-                    if (jdata['errors']) {
+                    if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/customerText/_version/1/',
                             uri: 'v1/customerText/',
                             task: task,
-                            errors: jdata['errors']
+                            errors: jdata['errors'],
+                            'error.code': jdata['error.code'],
+                            'error.message': jdata['error.message']
                         };
                         // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
@@ -410,12 +412,14 @@ export abstract class AMSApis extends Handler {
                         return { json, statusCode: 200 };
                     }
                 } else if (text === 'I') {
-                    if (jdata['errors']) {
+                    if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/inhouseText/_version/1/',
                             uri: 'v1/inhouseText/',
                             task: task,
-                            errors: jdata['errors']
+                            errors: jdata['errors'],
+                            'error.code': jdata['error.code'],
+                            'error.message': jdata['error.message']
                         };
                         // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
@@ -433,12 +437,14 @@ export abstract class AMSApis extends Handler {
                         return { json, statusCode: 200 };
                     }
                 } else if (text === 'TC') {
-                    if (jdata['errors']) {
+                    if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/customerText/_version/1/',
                             uri: 'v1/customerText/',
                             task: task,
-                            errors: jdata['errors']
+                            errors: jdata['errors'],
+                            'error.code': jdata['error.code'],
+                            'error.message': jdata['error.message']
                         };
                         // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
@@ -454,12 +460,14 @@ export abstract class AMSApis extends Handler {
                         return { json, statusCode: 200 };
                     }
                 } else if (text === 'TI') {
-                    if (jdata['errors']) {
+                    if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/inhouseText/_version/1/',
                             uri: 'v1/inhouseText/',
                             task: task,
-                            errors: jdata['errors']
+                            errors: jdata['errors'],
+                            'error.code': jdata['error.code'],
+                            'error.message': jdata['error.message']
                         };
                         // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
@@ -476,12 +484,14 @@ export abstract class AMSApis extends Handler {
                     }
                 } else {
                     // ams error give a 400
-                    if (jdata['errors']) {
+                    if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/ams-view/_version/1/',
                             uri: 'v1/ams-view/',
                             task: task,
-                            errors: jdata['errors']
+                            errors: jdata['errors'],
+                            'error.code': jdata['error.code'],
+                            'error.message': jdata['error.message']
                         };
                         // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
@@ -592,7 +602,6 @@ export abstract class AMSApis extends Handler {
                 switch (apiInfo.id) {
                     case 'ams-edit._':
                         TYPE = 'TaskPut';
-
                         return putPackageAmsSend(task, TYPE, ctx);
                     default:
                         throw new RestApiRequestError(500);
@@ -602,13 +611,30 @@ export abstract class AMSApis extends Handler {
                 return putAmsData(p);
             })
             .then(a => {
-                processAmsData(a);
-                const json = {
-                    resource: 'v1/resource/ams-edit/_version/1/',
-                    uri: 'v1/ams-edit/',
-                    task: task
-                };
-                return { json, statusCode: 200 };
+                let jdata = processAmsData(a);
+                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                    const errors = {
+                        resource: 'v1/resource/ams-edit/_version/1/',
+                        uri: 'v1/ams-edit/',
+                        task: task,
+                        errors: jdata['errors'],
+                        'error.code': jdata['error.code'],
+                        'error.message': jdata['error.message']
+                    };
+                    // return { errors, statusCode: 500 };
+                    throw new RestApiRequestError(400, '', {}, errors);
+                } else {
+                    const json = {
+                        resource: 'v1/resource/ams-edit/_version/1/',
+                        uri: 'v1/ams-edit/',
+                        task: task,
+                        site: jdata.site,
+                        module: jdata.module,
+                        NTUSER: jdata.NTUSER,
+                        'task.last.edit': jdata['task.last.edit']
+                    };
+                    return { json, statusCode: 200 };
+                }
             })
             .then(resolvePromise, rejectPromise);
     }

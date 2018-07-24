@@ -11,8 +11,7 @@
     "properties": {
         "task": {
             "type": "string",
-            "required": true,
-            "responseOnly": true
+            "required": true
         },
         "site": {
             "type": "object",
@@ -53,15 +52,18 @@
         "ams.task.entry.time": {
             "type": "string",
             "required": true,
+            "requestOnly": true,
             "#doc": "ISO-8601 Date"
         },
         "ams.task.received.date": {
             "type": "string",
             "required": true,
+            "requestOnly": true,
             "#doc": "ISO-8601 Date"
         },
         "ams.task.product.group": {
             "type": "string",
+            "requestOnly": true,
             "required": true
         },
         "task.status": {
@@ -70,14 +72,17 @@
                 "properties": {
                     "ams.task.status": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "task.status.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
             }
         },
         "task.status.completed.date": {
@@ -90,19 +95,23 @@
                 "properties": {
                     "ams.task.priority": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "task.priority.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
             }
         },
         "ams.task.patient.safety": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "priority.lists": {
             "type": "object[]",
@@ -122,11 +131,13 @@
         },
         "ams.task.reference.number": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "ams.task.description": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "task.request.type": {
             "type": "object",
@@ -134,35 +145,43 @@
                 "properties": {
                     "ams.task.request.type": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "request.type.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
             }
         },
         "ams.task.live.system": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "ams.task.test.system": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "ams.task.update.system": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "ams.task.contact": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "ams.task.contact.phone": {
             "type": "string",
-            "required": true
+            "required": true,
+            "requestOnly": true
         },
         "email": {
             "type": "object",
@@ -170,23 +189,26 @@
                 "properties": {
                     "ams.task.email": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "ams.task.email.notify.type": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "task.notify.type.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
             }
         },
         "module.notifications": {
             "type": "object[]",
-            "required": true,
             "object": {
                 "properties": {
                     "mod.notif.contact": {
@@ -213,14 +235,36 @@
                 "properties": {
                     "ams.task.received.by": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "task.received.by.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
+            }
+        },
+        "task.assigned.to": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.assigned.to": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    },
+                    "task.assigned.to.name": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    }
+                },
+                "required": true,
+                "requestOnly": true
             }
         },
         "task.responsible.user": {
@@ -242,14 +286,17 @@
                 "properties": {
                     "ams.task.consultant": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "task.application.specialist.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
             }
         },
         "task.other.staff": {
@@ -258,14 +305,17 @@
                 "properties": {
                     "ams.task.other.staff": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     },
                     "task.other.staff.name": {
                         "type": "string",
-                        "required": true
+                        "required": true,
+                        "requestOnly": true
                     }
                 },
-                "required": true
+                "required": true,
+                "requestOnly": true
             }
         },
         "integrated.modules": {
@@ -353,6 +403,346 @@
                 }
             }
         },
+        "task.action": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.action": {
+                        "type": "string"
+                    },
+                    "task.action.name": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "task.product.group": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.product.group": {
+                        "type": "string"
+                    },
+                    "product.group.name": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "task.shift": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.shift": {
+                        "type": "string"
+                    },
+                    "task.shift.name": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "ams.task.shift.date": {
+            "type": "string",
+            "#doc": "ISO-8601 Date"
+        },
+        "ams.task.trap.file": {
+            "type": "string"
+        },
+        "ams.task.target.date": {
+            "type": "string",
+            "#doc": "ISO-8601 Date",
+            "required": true,
+            "requestOnly": true
+        },
+        "task.category": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "ams.task.category": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    },
+                    "ams.task.technology": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    },
+                    "technology.name": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    },
+                    "task.category.name": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    }
+                }
+            },
+            "required": true,
+            "requestOnly": true
+        },
+        "task.support.group": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "support.group.name": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    }
+                }
+            },
+            "required": true,
+            "requestOnly": true
+        },   
+        "keywords": {
+            "type": "object[]",
+            "object": {
+                "properties": {
+                    "keyword": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "programs": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "data.definitions": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "change": {
+                                    "type": "string"
+                                },
+                                "dpm": {
+                                    "type": "string"
+                                },
+                                "segment": {
+                                    "type": "string"
+                                }                    
+                            }
+                        }
+                    },
+                    "procedures": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "change": {
+                                    "type": "string"
+                                },
+                                "dpm": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }                    
+                            }
+                        }
+                    },
+                    "other.code": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "application": {
+                                    "type": "string"
+                                },
+                                "dts.change": {
+                                    "type": "string"
+                                },
+                                "free.text": {
+                                    "type": "string"
+                                }                    
+                            }
+                        }
+                    },
+                    "free.text": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "line": {
+                                    "type": "string"
+                                },
+                                "text": {
+                                    "type": "string"
+                                }                                
+                            }
+                        }
+                    }                                                                                      
+                }
+            }   
+        },         
+        "development ": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "jira": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "issue": {
+                                    "type": "string"
+                                },
+                                "number": {
+                                    "type": "string"
+                                },
+                                "inhouse": {
+                                    "type": "string"
+                                },
+                                "test": {
+                                    "type": "string"
+                                },
+                                "live": {
+                                    "type": "string"
+                                },
+                                "override": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "platform": {
+                                    "type": "string"
+                                },
+                                "inhouse.approved.by": {
+                                    "type": "string"
+                                },
+                                "inhouse.moved.by": {
+                                    "type": "string"
+                                },
+                                "test.approved.by": {
+                                    "type": "string"
+                                },
+                                "test.moved.by": {
+                                    "type": "string"
+                                },
+                                "live.approved.by": {
+                                    "type": "string"
+                                },
+                                "live.moved.by": {
+                                    "type": "string"
+                                },
+                                "live.date": {
+                                    "type": "string",
+                                    "#doc": "ISO-8601 Date"
+                                },
+                                "source": {
+                                    "type": "string"
+                                },
+                                "jira.modules": {
+                                    "type": "object[]",
+                                    "object": {
+                                        "properties": {
+                                            "module": {
+                                                "type": "object",
+                                                "object": {
+                                                    "properties": {
+                                                        "mod": {
+                                                            "type": "string"
+                                                        },
+                                                        "module.name": {
+                                                            "type": "string"
+                                                        }                                
+                                                    }
+                                                }
+                                            },
+                                            "module.inhouse": {
+                                                "type": "string"
+                                            },
+                                            "module.test": {
+                                                "type": "string"
+                                            },
+                                            "module.live": {
+                                                "type": "string"
+                                            },
+                                            "module.override": {
+                                                "type": "string"
+                                            }                    
+                                        }
+                                    }
+                                }                                
+                            }
+                        }
+                    },
+                    "dts": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "module": {
+                                    "type": "string"
+                                },
+                                "number": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "inhouse": {
+                                    "type": "string"
+                                },
+                                "inhouse.approved.by": {
+                                    "type": "string"
+                                },     
+                                "inhouse.moved.by": {
+                                    "type": "string"
+                                },     
+                                "test": {
+                                    "type": "string"
+                                },     
+                                "test.approved.by": {
+                                    "type": "string"
+                                },     
+                                "test.moved.by": {
+                                    "type": "string"
+                                },     
+                                "live": {
+                                    "type": "string"
+                                },     
+                                "live.approved.by": {
+                                    "type": "string"
+                                },     
+                                "live.moved.by": {
+                                    "type": "string"
+                                },     
+                                "override": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },  
+                                "platform": {
+                                    "type": "string"
+                                },
+                                "live.date": {
+                                    "type": "string",
+                                    "#doc": "ISO-8601 Date"
+                                },  
+                                "source": {
+                                    "type": "string"
+                                }                                                                                                                            
+                            }
+                        }
+                    }                                                                               
+                }
+            }   
+        },
+        "warning.text": {
+            "type": "object[]",
+            "object": {
+                "properties": {
+                    "line": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    }                                      
+                }
+            }
+        },                             
         "ams.added.files": {
             "type": "object[]",
             "object": {
@@ -407,7 +797,13 @@
                 "properties": {
                     "task.switch.wac": {
                         "type": "string"
-                    }
+                    },
+                    "wac.from": {
+                        "type": "string"
+                    },
+                    "wac.to": {
+                        "type": "string"
+                    }                                        
                 }
             }
         }
