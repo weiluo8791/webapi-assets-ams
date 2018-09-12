@@ -44,6 +44,14 @@
                     "module.name": {
                         "type": "string",
                         "required": true
+                    },
+                    "ams.task.module.status": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "module.status.name": {
+                        "type": "string",
+                        "required": true
                     }
                 },
                 "required": true
@@ -60,11 +68,6 @@
             "required": true,
             "requestOnly": true,
             "#doc": "ISO-8601 Date"
-        },
-        "ams.task.product.group": {
-            "type": "string",
-            "requestOnly": true,
-            "required": true
         },
         "task.status": {
             "type": "object",
@@ -358,24 +361,81 @@
                     "task": {
                         "type": "string"
                     },
-                    "wac": {
+                    "ams": {
                         "type": "string"
                     },
                     "last.edit": {
                         "type": "string",
                         "#doc": "ISO-8601 Date"
                     },
-                    "module": {
-                        "type": "string"
-                    },
-                    "status": {
-                        "type": "string"
-                    },
-                    "status.name": {
-                        "type": "string"
-                    },
                     "task.description": {
                         "type": "string"
+                    },
+                    "ams.task.received.date": {
+                        "type": "string",
+                        "#doc": "ISO-8601 Date"
+                    },
+                    "task.last.edit": {
+                        "type": "string",
+                        "#doc": "ISO-8601 Date"
+                    },
+                    "task.status": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "status": {
+                                    "type": "string"
+                                },
+                                "status.name": {
+                                    "type": "string"
+                                }                 
+                            }
+                        }
+                    },
+                    "module": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "mod": {
+                                    "type": "string"
+                                },
+                                "module.name": {
+                                    "type": "string"
+                                }                 
+                            }
+                        }
+                    },
+                    "task.category": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "ams.task.category": {
+                                    "type": "string"
+                                },
+                                "ams.task.technology": {
+                                    "type": "string"
+                                },
+                                "technology.name": {
+                                    "type": "string"
+                                },
+                                "task.category.name": {
+                                    "type": "string"
+                                }                     
+                            }
+                        }
+                    },
+                    "product.line": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "product.line": {
+                                    "type": "string"
+                                },
+                                "product.line.name": {
+                                    "type": "string"
+                                }                   
+                            }
+                        }
                     }
                 }
             }
@@ -750,6 +810,9 @@
                     "file.url": {
                         "type": "string"
                     },
+                    "file.urn": {
+                        "type": "string"
+                    },                    
                     "file.upload.date": {
                         "type": "string",
                         "#doc": "ISO-8601 Date"
