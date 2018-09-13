@@ -14,6 +14,11 @@
             "required": true,
             "responseOnly": true
         },
+        "ntuser": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },        
         "site": {
             "type": "object",
             "object": {
@@ -47,12 +52,10 @@
                         "required": true
                     },
                     "ams.task.module.status": {
-                        "type": "string",
-                        "required": true
+                        "type": "string"
                     },
                     "module.status.name": {
-                        "type": "string",
-                        "required": true
+                        "type": "string"
                     }
                 },
                 "required": true
@@ -242,78 +245,97 @@
                 "required": true
             }
         },
-        "task.responsible.user": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.responsible.user": {
-                        "type": "string"
-                    },
-                    "ams.task.responsible.user.name": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "task.application.specialist": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.consultant": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.application.specialist.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "task.other.staff": {
-            "type": "object",
-            "object": {
-                "properties": {
-                    "ams.task.other.staff": {
-                        "type": "string",
-                        "required": true
-                    },
-                    "task.other.staff.name": {
-                        "type": "string",
-                        "required": true
-                    }
-                },
-                "required": true
-            }
-        },
-        "integrated.modules": {
+        "staff": {
             "type": "object[]",
             "object": {
                 "properties": {
-                    "user.mnemonic": {
-                        "type": "string"
+                    "responsible.user": {
+                        "type": "string",
+                        "required": true
                     },
-                    "user.name": {
-                        "type": "string"
+                    "staff.type": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "staff.type.mnemonic": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "staff.type.name": {
+                                    "type": "string",
+                                    "required": true
+                                }                 
+                            }
+                        },
+                        "required": true
                     },
                     "module": {
-                        "type": "string"
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "mod": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "module.name": {
+                                    "type": "string",
+                                    "required": true
+                                }                 
+                            }
+                        },
+                        "required": true
                     },
-                    "module.name": {
-                        "type": "string"
+                    "staff.user": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "user.mnemonic": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "user.name": {
+                                    "type": "string",
+                                    "required": true
+                                }                 
+                            }
+                        },
+                        "required": true
                     },
-                    "email": {
-                        "type": "string"
+                    "staff.notify.type": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "notify.type.mnemonic": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "notify.type.name": {
+                                    "type": "string",
+                                    "required": true
+                                }                 
+                            }
+                        },
+                        "required": true
                     },
-                    "extension": {
-                        "type": "string"
-                    },
-                    "location": {
-                        "type": "string"
-                    }
+                    "staff.action": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "action.mnemonic": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "action.name": {
+                                    "type": "string",
+                                    "required": true
+                                }                 
+                            }
+                        },
+                        "required": true
+                    }                                                               
                 }
-            }
+            },
+            "required": true
         },
         "task.last.edit": {
             "type": "string",
@@ -447,13 +469,16 @@
             "object": {
                 "properties": {
                     "ams.task.product.group": {
-                        "type": "string"
+                        "type": "string",
+                        "required": true
                     },
                     "product.group.name": {
-                        "type": "string"
+                        "type": "string",
+                        "required": true
                     }
                 }
-            }
+            },
+            "required": true
         },
         "task.shift": {
             "type": "object",

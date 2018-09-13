@@ -226,7 +226,7 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
         NTUSER: 'ROGERS',
         TYPE: Type,
         WAC: 'ZZZ',
-        COOKIE: 'PxNgwB[Kj565146',
+        COOKIE: 'MC[BMnLjm347531',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -502,9 +502,10 @@ export abstract class AMSApis extends Handler {
                             uri: 'v1/ams-view/',
                             task: task,
                             site: jdata.site,
+                            ntuser: 'ROGERS',
                             module: jdata.module,
                             'ams.task.received.date': jdata['ams.task.received.date'],
-                            'ams.task.product.group': jdata['ams.task.product.group'],
+                            'task.product.group': jdata['task.product.group'],
                             'ams.task.entry.time': jdata['ams.task.entry.time'],
                             'task.status': jdata['task.status'],
                             'task.priority': jdata['task.priority'],
@@ -518,9 +519,8 @@ export abstract class AMSApis extends Handler {
                             'ams.task.contact': jdata['ams.task.contact'],
                             'ams.task.contact.phone': jdata['ams.task.contact.phone'],
                             'email': jdata['email'],
+                            'staff': jdata['staff'],
                             'task.received.by': jdata['task.received.by'],
-                            'task.application.specialist': jdata['task.application.specialist'],
-                            'task.other.staff': jdata['task.other.staff'],
                             'task.last.edit': jdata['task.last.edit'],
                             'task.category': jdata['task.category'],
                             'ams.task.target.date': jdata['ams.task.target.date'],
@@ -547,12 +547,6 @@ export abstract class AMSApis extends Handler {
                         }
                         if (jdata['module.notifications']) {
                             json['module.notifications'] = jdata['module.notifications'];
-                        }
-                        if (jdata['task.responsible.user']) {
-                            json['task.responsible.user'] = jdata['task.responsible.user'];
-                        }
-                        if (jdata['integrated.modules']) {
-                            json['integrated.modules'] = jdata['integrated.modules'];
                         }
                         if (jdata['related.issues']) {
                             json['related.issues'] = jdata['related.issues'];
@@ -612,16 +606,13 @@ export abstract class AMSApis extends Handler {
             })
             .then(a => {
                 let jdata = processAmsData(a);
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors']) {
                     const errors = {
                         resource: 'v1/resource/ams-edit/_version/1/',
                         uri: 'v1/ams-edit/',
                         task: task,
-                        errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        errors: jdata['errors']
                     };
-                    // return { errors, statusCode: 500 };
                     throw new RestApiRequestError(400, '', {}, errors);
                 } else {
                     const json = {
@@ -630,7 +621,7 @@ export abstract class AMSApis extends Handler {
                         task: task,
                         site: jdata.site,
                         module: jdata.module,
-                        NTUSER: jdata.NTUSER,
+                        ntuser: jdata.NTUSER,
                         'task.last.edit': jdata['task.last.edit']
                     };
                     return { json, statusCode: 200 };
