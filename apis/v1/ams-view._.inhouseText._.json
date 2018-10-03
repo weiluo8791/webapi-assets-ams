@@ -23,7 +23,13 @@
         }
     ],
     "methods": {
-        "get": {}
+        "get": {
+            "urlParameters": {
+                "NTUSER": {
+                    "type": "string"
+                }
+            }
+        }
     },
     "request": {
         "resource": "v1/resource/inhouseText/_version/1/"

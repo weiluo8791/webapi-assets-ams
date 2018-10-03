@@ -1,8 +1,8 @@
 {
-    "id": "ams-view._",
+    "id": "ams-view._.question._",
     "version": 1,
     "resource": "v1/resource/api/_version/1/",
-    "uri": "v1/api/ams-view._/_version/1/",
+    "uri": "v1/api/ams-view._.question._/_version/1/",
     "status": "draft",
     "route": [
         {
@@ -12,6 +12,10 @@
         {
             "id": "task",
             "type": "dynamic"
+        },
+        {
+            "id": "question",
+            "type": "static"
         }
     ],
     "methods": {
@@ -21,13 +25,13 @@
                     "type": "string"
                 }
             }
-        } 
+        }
     },
     "request": {
-        "resource": "v1/resource/ams-view/_version/1/"
-    },    
+        "resource": "v1/resource/question/_version/1/"
+    },
     "response": {
-        "resource": "v1/resource/ams-view/_version/1/"
+        "resource": "v1/resource/question/_version/1/"
     },
     "connectivity": [
         {

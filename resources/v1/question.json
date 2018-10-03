@@ -1,0 +1,104 @@
+{
+    "id": "question",
+    "version": 1,
+    "resource": "v1/resource/resource/_version/1/",
+    "status": "draft",
+    "uri": "v1/resource/question/_version/1/",
+    "cache": {
+        "timeToLive": "short",
+        "timeConsideredFresh": "always"
+    },
+    "properties": {
+        "task": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },
+        "ntuser": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },        
+        "questions": {
+            "type": "object[]",
+            "object": {
+                "properties": {
+                    "order": {
+                        "type": "string"
+                    },
+                    "number": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },  
+                    "status": {
+                        "type": "string"
+                    },  
+                    "origin": {
+                        "type": "string"
+                    },   
+                    "required": {
+                        "type": "string"
+                    },                                                     
+                    "question.data.type": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "data.type.name": {
+                                    "type": "string"
+                                },
+                                "data.type.type": {
+                                    "type": "string"
+                                },
+                                "data.type.abbr": {
+                                    "type": "string"
+                                },
+                                "data.type.short.abbr": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "question.last.edit": {
+                        "type": "object",
+                        "object": {
+                            "properties": {
+                                "transaction": {
+                                    "type": "string"
+                                },
+                                "last.edit.user": {
+                                    "type": "object",
+                                    "object": {
+                                        "properties": {
+                                            "user": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }                        
+                                },
+                                "last.edit.date": {
+                                    "type": "string",
+                                    "#doc": "ISO-8601 Date"
+                                }
+                            }
+                        }
+                    },
+                    "response": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "value": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }                        
+                }
+            }
+        }
+    }
+}

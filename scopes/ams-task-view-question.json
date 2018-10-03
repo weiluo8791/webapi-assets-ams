@@ -1,0 +1,23 @@
+{
+    "id": "ams-task-view-question",
+    "resource": "v1/resource/scope/_version/1/",    
+    "description": [
+        {
+            "data": "Allows view ams task question",
+            "contentType": "text/plain",
+            "language": "en-US"
+        }
+    ],
+    "defaultRule": "allow",
+    "aclRules": [],
+    "apis": [
+        {
+            "api": "ams-view._.question._",
+            "version": 1,
+            "methods": [
+                "get"
+            ],
+            "defURI": "v1/api/ams-view._.question._/_version/1/"
+        }     
+    ]
+}
