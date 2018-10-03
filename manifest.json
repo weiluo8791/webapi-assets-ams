@@ -15,7 +15,7 @@
 		"apis/v1/ams-view._.json",
 		"apis/v1/ams-view._.customerText._.json",
 		"apis/v1/ams-view._.inhouseText._.json",
-		"apis/v1/ams-view._.question._.json"
+		"apis/v1/ams-view._.question.json"
 	],
 	"scopes": [
 		"scopes/ams-task-edit.json",

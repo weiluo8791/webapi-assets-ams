@@ -12,12 +12,12 @@
     "aclRules": [],
     "apis": [
         {
-            "api": "ams-view._.question._",
+            "api": "ams-view._.question",
             "version": 1,
             "methods": [
                 "get"
             ],
-            "defURI": "v1/api/ams-view._.question._/_version/1/"
+            "defURI": "v1/api/ams-view._.question/_version/1/"
         }     
     ]
 }
