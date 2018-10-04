@@ -391,26 +391,25 @@ export abstract class AMSApis extends Handler {
             })
             .then(a => {
                 let jdata = processAmsData(a);
-                // customerText
-                if (text === 'C') {
+                if (text === 'C') { // customerText
                     // error give 400
                     if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/customerText/_version/1/',
-                            uri: 'v1/customerText/',
+                            uri: 'v1/resource/customerText/_version/1/',
                             task: task,
                             errors: jdata['errors'],
                             'error.code': jdata['error.code'],
                             'error.message': jdata['error.message']
                         };
-                        // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
                     } else {
                         // require fields
                         const json = {
                             resource: 'v1/resource/customerText/_version/1/',
-                            uri: 'v1/customerText/',
+                            uri: 'v1/resource/customerText/_version/1/',
                             task: task,
+                            ntuser: jdata.ntuser,
                             text: text,
                             start: start,
                             end: end,
@@ -418,25 +417,25 @@ export abstract class AMSApis extends Handler {
                         };
                         return { json, statusCode: 200 };
                     }
-                } else if (text === 'I') {
+                } else if (text === 'I') {  // inhouseText
                     // error give 400
                     if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/inhouseText/_version/1/',
-                            uri: 'v1/inhouseText/',
+                            uri: 'v1/resource/inhouseText/_version/1/',
                             task: task,
                             errors: jdata['errors'],
                             'error.code': jdata['error.code'],
                             'error.message': jdata['error.message']
                         };
-                        // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
                     } else {
                         // require fields
                         const json = {
                             resource: 'v1/resource/inhouseText/_version/1/',
-                            uri: 'v1/inhouseText/',
+                            uri: 'v1/resource/inhouseText/_version/1/',
                             task: task,
+                            ntuser: jdata.ntuser,
                             text: text,
                             start: start,
                             end: end,
@@ -444,75 +443,75 @@ export abstract class AMSApis extends Handler {
                         };
                         return { json, statusCode: 200 };
                     }
-                } else if (text === 'TC') {
+                } else if (text === 'TC') {  // customerText count
                     // error give 400
                     if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/customerText/_version/1/',
-                            uri: 'v1/customerText/',
+                            uri: 'v1/resource/customerText/_version/1/',
                             task: task,
                             errors: jdata['errors'],
                             'error.code': jdata['error.code'],
                             'error.message': jdata['error.message']
                         };
-                        // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
                     } else {
                         // require fields
                         const json = {
                             resource: 'v1/resource/customerText/_version/1/',
-                            uri: 'v1/customerText/',
+                            uri: 'v1/resource/customerText/_version/1/',
                             task: task,
+                            ntuser: jdata.ntuser,
                             text: text,
                             count: jdata['count']
                         };
                         return { json, statusCode: 200 };
                     }
-                } else if (text === 'TI') {
+                } else if (text === 'TI') {  // inhouseText count
                     // error give 400
                     if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/inhouseText/_version/1/',
-                            uri: 'v1/inhouseText/',
+                            uri: 'v1/resource/inhouseText/_version/1/',
                             task: task,
                             errors: jdata['errors'],
                             'error.code': jdata['error.code'],
                             'error.message': jdata['error.message']
                         };
-                        // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
                     } else {
                         // require fields
                         const json = {
                             resource: 'v1/resource/inhouseText/_version/1/',
-                            uri: 'v1/inhouseText/',
+                            uri: 'v1/resource/inhouseText/_version/1/',
                             task: task,
+                            ntuser: jdata.ntuser,
                             text: text,
                             count: jdata['count']
                         };
                         return { json, statusCode: 200 };
                     }
-                } else if (jdata['questions']) {
+                } else if (jdata['questions']) { // question
                     // error give 400
                     if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/question/_version/1/',
-                            uri: 'v1/question/_version/1/',
+                            uri: 'v1/resource/question/_version/1/',
                             task: task,
                             errors: jdata['errors'],
                             'error.code': jdata['error.code'],
                             'error.message': jdata['error.message']
                         };
-                        // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
                         // response
                     } else {
                         // require fields
                         const json = {
                             resource: 'v1/resource/question/_version/1/',
-                            uri: 'v1/question/',
+                            uri: 'v1/resource/question/_version/1/',
                             task: task,
-                            ntuser: 'WLUO@MEDITECH.COM'
+                            ntuser: jdata.ntuser,
+                            'ams.user': jdata['ams.user']
                         };
                         // optional fields
                         if (jdata['questions']) {
@@ -520,24 +519,23 @@ export abstract class AMSApis extends Handler {
                         }
                         return { json, statusCode: 200 };
                     }
-                } else {
+                } else { // ams-view
                     // ams error give a 400
                     if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                         const errors = {
                             resource: 'v1/resource/ams-view/_version/1/',
-                            uri: 'v1/ams-view/',
+                            uri: 'v1/resource/ams-view/_version/1/',
                             task: task,
                             errors: jdata['errors'],
                             'error.code': jdata['error.code'],
                             'error.message': jdata['error.message']
                         };
-                        // return { errors, statusCode: 500 };
                         throw new RestApiRequestError(400, '', {}, errors);
                     } else {
                         // require fields
                         const json = {
                             resource: 'v1/resource/ams-view/_version/1/',
-                            uri: 'v1/ams-view/',
+                            uri: 'v1/resource/ams-view/_version/1/',
                             task: task,
                             site: jdata.site,
                             ntuser: jdata.ntuser,
@@ -648,7 +646,7 @@ export abstract class AMSApis extends Handler {
                 if (jdata['errors']) {
                     const errors = {
                         resource: 'v1/resource/ams-edit/_version/1/',
-                        uri: 'v1/ams-edit/',
+                        uri: 'v1/resource/ams-edit/_version/1/',
                         task: task,
                         errors: jdata['errors']
                     };
@@ -656,11 +654,11 @@ export abstract class AMSApis extends Handler {
                 } else {
                     const json = {
                         resource: 'v1/resource/ams-edit/_version/1/',
-                        uri: 'v1/ams-edit/',
+                        uri: 'v1/resource/ams-edit/_version/1/',
                         task: task,
                         site: jdata.site,
                         module: jdata.module,
-                        ntuser: jdata.NTUSER,
+                        ntuser: jdata.ntuser,
                         'task.last.edit': jdata['task.last.edit']
                     };
                     return { json, statusCode: 200 };

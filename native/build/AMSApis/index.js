@@ -283,7 +283,7 @@ class AMSApis extends Handler_1.Handler {
                 if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/customerText/_version/1/',
-                        uri: 'v1/customerText/',
+                        uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
                         'error.code': jdata['error.code'],
@@ -294,8 +294,9 @@ class AMSApis extends Handler_1.Handler {
                 else {
                     const json = {
                         resource: 'v1/resource/customerText/_version/1/',
-                        uri: 'v1/customerText/',
+                        uri: 'v1/resource/customerText/_version/1/',
                         task: task,
+                        ntuser: jdata.ntuser,
                         text: text,
                         start: start,
                         end: end,
@@ -308,7 +309,7 @@ class AMSApis extends Handler_1.Handler {
                 if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/inhouseText/_version/1/',
-                        uri: 'v1/inhouseText/',
+                        uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
                         'error.code': jdata['error.code'],
@@ -319,8 +320,9 @@ class AMSApis extends Handler_1.Handler {
                 else {
                     const json = {
                         resource: 'v1/resource/inhouseText/_version/1/',
-                        uri: 'v1/inhouseText/',
+                        uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
+                        ntuser: jdata.ntuser,
                         text: text,
                         start: start,
                         end: end,
@@ -333,7 +335,7 @@ class AMSApis extends Handler_1.Handler {
                 if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/customerText/_version/1/',
-                        uri: 'v1/customerText/',
+                        uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
                         'error.code': jdata['error.code'],
@@ -344,8 +346,9 @@ class AMSApis extends Handler_1.Handler {
                 else {
                     const json = {
                         resource: 'v1/resource/customerText/_version/1/',
-                        uri: 'v1/customerText/',
+                        uri: 'v1/resource/customerText/_version/1/',
                         task: task,
+                        ntuser: jdata.ntuser,
                         text: text,
                         count: jdata['count']
                     };
@@ -356,7 +359,7 @@ class AMSApis extends Handler_1.Handler {
                 if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/inhouseText/_version/1/',
-                        uri: 'v1/inhouseText/',
+                        uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
                         'error.code': jdata['error.code'],
@@ -367,8 +370,9 @@ class AMSApis extends Handler_1.Handler {
                 else {
                     const json = {
                         resource: 'v1/resource/inhouseText/_version/1/',
-                        uri: 'v1/inhouseText/',
+                        uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
+                        ntuser: jdata.ntuser,
                         text: text,
                         count: jdata['count']
                     };
@@ -379,7 +383,7 @@ class AMSApis extends Handler_1.Handler {
                 if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/question/_version/1/',
-                        uri: 'v1/question/_version/1/',
+                        uri: 'v1/resource/question/_version/1/',
                         task: task,
                         errors: jdata['errors'],
                         'error.code': jdata['error.code'],
@@ -390,9 +394,10 @@ class AMSApis extends Handler_1.Handler {
                 else {
                     const json = {
                         resource: 'v1/resource/question/_version/1/',
-                        uri: 'v1/question/',
+                        uri: 'v1/resource/question/_version/1/',
                         task: task,
-                        ntuser: 'WLUO@MEDITECH.COM'
+                        ntuser: jdata.ntuser,
+                        'ams.user': jdata['ams.user']
                     };
                     if (jdata['questions']) {
                         json['questions'] = jdata['questions'];
@@ -404,7 +409,7 @@ class AMSApis extends Handler_1.Handler {
                 if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
                     const errors = {
                         resource: 'v1/resource/ams-view/_version/1/',
-                        uri: 'v1/ams-view/',
+                        uri: 'v1/resource/ams-view/_version/1/',
                         task: task,
                         errors: jdata['errors'],
                         'error.code': jdata['error.code'],
@@ -415,7 +420,7 @@ class AMSApis extends Handler_1.Handler {
                 else {
                     const json = {
                         resource: 'v1/resource/ams-view/_version/1/',
-                        uri: 'v1/ams-view/',
+                        uri: 'v1/resource/ams-view/_version/1/',
                         task: task,
                         site: jdata.site,
                         ntuser: jdata.ntuser,
@@ -519,7 +524,7 @@ class AMSApis extends Handler_1.Handler {
             if (jdata['errors']) {
                 const errors = {
                     resource: 'v1/resource/ams-edit/_version/1/',
-                    uri: 'v1/ams-edit/',
+                    uri: 'v1/resource/ams-edit/_version/1/',
                     task: task,
                     errors: jdata['errors']
                 };
@@ -528,11 +533,11 @@ class AMSApis extends Handler_1.Handler {
             else {
                 const json = {
                     resource: 'v1/resource/ams-edit/_version/1/',
-                    uri: 'v1/ams-edit/',
+                    uri: 'v1/resource/ams-edit/_version/1/',
                     task: task,
                     site: jdata.site,
                     module: jdata.module,
-                    ntuser: jdata.NTUSER,
+                    ntuser: jdata.ntuser,
                     'task.last.edit': jdata['task.last.edit']
                 };
                 return { json, statusCode: 200 };
