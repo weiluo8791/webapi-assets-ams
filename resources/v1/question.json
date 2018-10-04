@@ -18,7 +18,12 @@
             "type": "string",
             "required": true,
             "responseOnly": true
-        },        
+        },
+        "ams.user": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },
         "questions": {
             "type": "object[]",
             "object": {
@@ -31,16 +36,16 @@
                     },
                     "text": {
                         "type": "string"
-                    },  
+                    },
                     "status": {
                         "type": "string"
-                    },  
+                    },
                     "origin": {
                         "type": "string"
-                    },   
+                    },
                     "required": {
                         "type": "string"
-                    },                                                     
+                    },
                     "question.data.type": {
                         "type": "object",
                         "object": {
@@ -78,7 +83,7 @@
                                                 "type": "string"
                                             }
                                         }
-                                    }                        
+                                    }
                                 },
                                 "last.edit.date": {
                                     "type": "string",
@@ -96,7 +101,7 @@
                                 }
                             }
                         }
-                    }                        
+                    }
                 }
             }
         }

@@ -14,6 +14,11 @@
             "required": true,
             "responseOnly": true
         },
+        "ntuser": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },         
         "text": {
             "type": "string",
             "required": true,
