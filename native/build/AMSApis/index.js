@@ -128,11 +128,13 @@ function stringToHex(str) {
     }
     return hex;
 }
-function putPackageAmsSend(task, Type, ctx) {
+function putPackageAmsSend(task, type, ctx) {
     let localIp = getLocalIp()[0];
     let totalParameters;
     let body;
+    let ntuser;
     let bodyJson;
+    ntuser = ctx.body.ntuser;
     body = JSON.stringify(ctx.body);
     bodyJson = body.match(/.{1,100}/g);
     totalParameters = hex16(12);
@@ -143,10 +145,10 @@ function putPackageAmsSend(task, Type, ctx) {
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        NTUSER: 'WLUO@MEDITECH.COM',
-        TYPE: Type,
+        NTUSER: ntuser,
+        TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'RYCVcUkbZ382619',
+        COOKIE: 'XfTEPeBeH386168',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };

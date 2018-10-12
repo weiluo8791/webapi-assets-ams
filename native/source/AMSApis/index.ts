@@ -204,13 +204,15 @@ function pad(num, size) {
 } */
 
 // setup a AMS PUT packet
-function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
+function putPackageAmsSend(task: string, type: string, ctx: RequestContext) {
     // Define variable
     let localIp = getLocalIp()[0];
     let totalParameters: string;
     let body: string;
+    let ntuser: string;
     let bodyJson: string[];
 
+    ntuser = ctx.body.ntuser;
     body = JSON.stringify(ctx.body);
     bodyJson = body.match(/.{1,100}/g);
     // totalParameters = hex16(11 + bodyJson.length);
@@ -223,10 +225,10 @@ function putPackageAmsSend(task: string, Type: string, ctx: RequestContext) {
         HTTPS: 'off',
         SERVER_PORT: '80',
         SERVER_PORT_SECURE: '0',
-        NTUSER: 'WLUO@MEDITECH.COM',
-        TYPE: Type,
+        NTUSER: ntuser,
+        TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'RYCVcUkbZ382619',
+        COOKIE: 'XfTEPeBeH386168',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
