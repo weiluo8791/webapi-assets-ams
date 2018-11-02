@@ -1,0 +1,75 @@
+{
+    "id": "addText",
+    "version": 1,
+    "resource": "v1/resource/resource/_version/1/",
+    "status": "draft",
+    "uri": "v1/resource/addText/_version/1/",
+    "cache": {
+        "timeToLive": "short",
+        "timeConsideredFresh": "always"
+    },
+    "properties": {
+        "task": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },      
+        "ntuser": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },
+        "inhouse": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "lines": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "text": {
+                                    "type": "string",
+                                    "#doc": "Up to 80 characters, Will be nil for blank lines."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "customer": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "lines": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "text": {
+                                    "type": "string",
+                                    "#doc": "Up to 80 characters, Will be nil for blank lines."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "warnings": {
+            "type": "object[]",
+            "object": {
+                "properties": {
+                    "warning.code": {
+                        "type": "string"
+                    },
+                    "wac.from": {
+                        "type": "string"
+                    },
+                    "wac.to": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "resource": "v1/resource/native-handler/_version/1/",
+    "id": "AMSApis",
+    "semver": "1.0.0",
+    "assets": {
+        "filesRoot": "native/build/AMSApis"
+    }
+}

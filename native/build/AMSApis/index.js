@@ -148,7 +148,7 @@ function putPackageAmsSend(task, type, ctx) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'XfTEPeBeH386168',
+        COOKIE: 'SQyJWNnm]390008',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -514,6 +514,9 @@ class AMSApis extends Handler_1.Handler {
                 case 'ams-edit._':
                     TYPE = 'TaskPut';
                     return putPackageAmsSend(task, TYPE, ctx);
+                case 'ams-edit._.addText':
+                    TYPE = 'TaskPutText';
+                    return putPackageAmsSend(task, TYPE, ctx);
                 default:
                     throw new errors_1.RestApiRequestError(500);
             }
@@ -523,26 +526,50 @@ class AMSApis extends Handler_1.Handler {
         })
             .then(a => {
             let jdata = processAmsData(a);
-            if (jdata['errors']) {
-                const errors = {
-                    resource: 'v1/resource/ams-edit/_version/1/',
-                    uri: 'v1/resource/ams-edit/_version/1/',
-                    task: task,
-                    errors: jdata['errors']
-                };
-                throw new errors_1.RestApiRequestError(400, '', {}, errors);
+            if (TYPE === 'TaskPut') {
+                if (jdata['errors']) {
+                    const errors = {
+                        resource: 'v1/resource/ams-edit/_version/1/',
+                        uri: 'v1/resource/ams-edit/_version/1/',
+                        task: task,
+                        errors: jdata['errors']
+                    };
+                    throw new errors_1.RestApiRequestError(400, '', {}, errors);
+                }
+                else {
+                    const json = {
+                        resource: 'v1/resource/ams-edit/_version/1/',
+                        uri: 'v1/resource/ams-edit/_version/1/',
+                        task: task,
+                        site: jdata.site,
+                        module: jdata.module,
+                        ntuser: jdata.ntuser,
+                        'task.last.edit': jdata['task.last.edit']
+                    };
+                    return { json, statusCode: 200 };
+                }
             }
-            else {
-                const json = {
-                    resource: 'v1/resource/ams-edit/_version/1/',
-                    uri: 'v1/resource/ams-edit/_version/1/',
-                    task: task,
-                    site: jdata.site,
-                    module: jdata.module,
-                    ntuser: jdata.ntuser,
-                    'task.last.edit': jdata['task.last.edit']
-                };
-                return { json, statusCode: 200 };
+            else if (TYPE === 'TaskPutText') {
+                if (jdata['errors']) {
+                    const errors = {
+                        resource: 'v1/resource/addText/_version/1/',
+                        uri: 'v1/resource/addText/_version/1/',
+                        task: task,
+                        errors: jdata['errors']
+                    };
+                    throw new errors_1.RestApiRequestError(400, '', {}, errors);
+                }
+                else {
+                    const json = {
+                        resource: 'v1/resource/addText/_version/1/',
+                        uri: 'v1/resource/addText/_version/1/',
+                        task: task,
+                        site: jdata.site,
+                        ntuser: jdata.ntuser,
+                        'task.last.edit': jdata['task.last.edit']
+                    };
+                    return { json, statusCode: 200 };
+                }
             }
         })
             .then(resolvePromise, rejectPromise);

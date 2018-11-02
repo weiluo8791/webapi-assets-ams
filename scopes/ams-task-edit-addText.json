@@ -1,0 +1,26 @@
+{
+    "id": "ams-task-edit-addText",
+    "resource": "v1/resource/scope/_version/1/",    
+    "description": [
+        {
+            "data": "Allows adding/appending ams customer and inhouse text",
+            "contentType": "text/plain",
+            "language": "en-US"
+        }
+    ],
+    "defaultRule": "allow",
+    "aclRules": [],
+    "apis": [
+        {
+            "api": "ams-edit._.addText",
+            "version": 1,
+            "methods": [
+                "put",
+                "patch",
+                "post",
+                "delete"
+            ],
+            "defURI": "v1/api/ams-edit._.addText/_version/1/"
+        }     
+    ]
+}

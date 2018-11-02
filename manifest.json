@@ -1,37 +1,26 @@
 {
+	"resource": "v1/resource/manifest/_version/2/",
 	"id": "ams-manifest",
-	"version": 1,
-	"versionString": "0.0.0.1",
-	"resource": "v1/resource/manifest/_version/1/",
-	"resources": [
+	"semver": "1.0.0",
+	"definitions": [
 		"resources/v1/ams-edit.json",
 		"resources/v1/ams-view.json",
 		"resources/v1/customerText.json",
 		"resources/v1/inhouseText.json",
-		"resources/v1/question.json"
-	],
-	"apis": [
+		"resources/v1/question.json",
+		"resources/v1/addText.json",
 		"apis/v1/ams-edit._.json",
+		"apis/v1/ams-edit._.addText.json",
 		"apis/v1/ams-view._.json",
 		"apis/v1/ams-view._.customerText._.json",
 		"apis/v1/ams-view._.inhouseText._.json",
-		"apis/v1/ams-view._.question.json"
-	],
-	"scopes": [
+		"apis/v1/ams-view._.question.json",
 		"scopes/ams-task-edit.json",
+		"scopes/ams-task-edit-addText.json",
 		"scopes/ams-task-view.json",
 		"scopes/ams-task-view-customerText.json",
 		"scopes/ams-task-view-inhouseText.json",
-		"scopes/ams-task-view-question.json"
-	],	
-	"requires": [
-		{
-			"type": "resource",
-			"resource": "v1/resource/resource/_version/1/"
-		},
-		{
-			"type": "resource",
-			"resource": "v1/resource/api/_version/1/"
-		}
+		"scopes/ams-task-view-question.json",
+		"native/handler.json"
 	]
-}
+  }
