@@ -148,7 +148,7 @@ function putPackageAmsSend(task, type, ctx) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'iQkzRsjNp390501',
+        COOKIE: '[ZPcfBqP]394817',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
