@@ -16,7 +16,12 @@
         "ntuser": {
             "type": "string",
             "required": true
-        },        
+        },
+        "ams.user": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },          
         "email.options": {
             "type": "object",
             "object": {
