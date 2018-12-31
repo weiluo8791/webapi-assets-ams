@@ -1,0 +1,50 @@
+{
+    "id": "sendEmail",
+    "version": 1,
+    "resource": "v1/resource/resource/_version/1/",
+    "status": "draft",
+    "uri": "v1/resource/sendEmail/_version/1/",
+    "cache": {
+        "timeToLive": "short",
+        "timeConsideredFresh": "always"
+    },
+    "properties": {
+        "task": {
+            "type": "string",
+            "required": true
+        },      
+        "ntuser": {
+            "type": "string",
+            "required": true
+        },        
+        "email.options": {
+            "type": "object",
+            "object": {
+                "properties": {
+                    "recipients": {
+                        "type": "object[]",
+                        "object": {
+                            "properties": {
+                                "recipient": {
+                                    "type": "string",
+                                    "required": true,
+                                    "requestOnly": true,
+                                    "#doc": "Up to 80 characters, Will be nil for blank lines."
+                                }
+                            },
+                            "required": true,
+                            "requestOnly": true
+                        }
+                    },
+                    "site": {
+                        "type": "string",
+                        "required": true,
+                        "requestOnly": true
+                    }                   
+                },
+                "required": true,
+                "requestOnly": true
+            }
+        }
+    }
+}

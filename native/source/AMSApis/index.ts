@@ -228,7 +228,7 @@ function putPackageAmsSend(task: string, type: string, ctx: RequestContext) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'iQkzRsjNp390501',
+        COOKIE: 'dRmOXWAqG412709',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -639,6 +639,9 @@ export abstract class AMSApis extends Handler {
                     case 'ams-edit._.addText':
                         TYPE = 'TaskPutText';
                         return putPackageAmsSend(task, TYPE, ctx);
+                    case 'ams-edit._.sendEmail':
+                        TYPE = 'TaskEmail';
+                        return putPackageAmsSend(task, TYPE, ctx);
                     default:
                         throw new RestApiRequestError(500);
                 }
@@ -686,6 +689,28 @@ export abstract class AMSApis extends Handler {
                             site: jdata.site,
                             ntuser: jdata.ntuser,
                             'task.last.edit': jdata['task.last.edit']
+                        };
+                        return { json, statusCode: 200 };
+                    }
+                } else if (TYPE === 'TaskEmail') { // send list of email to AMS
+                    if (jdata['errors']) {
+                        const errors = {
+                            resource: 'v1/resource/sendEmail/_version/1/',
+                            uri: 'v1/resource/sendEmail/_version/1/',
+                            task: task,
+                            errors: jdata['errors']
+                        };
+                        throw new RestApiRequestError(400, '', {}, errors);
+                    } else {
+                        const json = {
+                            resource: 'v1/resource/sendEmail/_version/1/',
+                            uri: 'v1/resource/sendEmail/_version/1/',
+                            task: task,
+                            ntuser: jdata.ntuser,
+                            'ams.user': jdata['ams.user'],
+                            'file.message': jdata['file.message'],
+                            module: jdata.module,
+                            site: jdata.site
                         };
                         return { json, statusCode: 200 };
                     }

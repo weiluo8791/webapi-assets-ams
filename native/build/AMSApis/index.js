@@ -148,7 +148,7 @@ function putPackageAmsSend(task, type, ctx) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: '[ZPcfBqP]394817',
+        COOKIE: 'dRmOXWAqG412709',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -517,6 +517,9 @@ class AMSApis extends Handler_1.Handler {
                 case 'ams-edit._.addText':
                     TYPE = 'TaskPutText';
                     return putPackageAmsSend(task, TYPE, ctx);
+                case 'ams-edit._.sendEmail':
+                    TYPE = 'TaskEmail';
+                    return putPackageAmsSend(task, TYPE, ctx);
                 default:
                     throw new errors_1.RestApiRequestError(500);
             }
@@ -567,6 +570,30 @@ class AMSApis extends Handler_1.Handler {
                         site: jdata.site,
                         ntuser: jdata.ntuser,
                         'task.last.edit': jdata['task.last.edit']
+                    };
+                    return { json, statusCode: 200 };
+                }
+            }
+            else if (TYPE === 'TaskEmail') {
+                if (jdata['errors']) {
+                    const errors = {
+                        resource: 'v1/resource/sendEmail/_version/1/',
+                        uri: 'v1/resource/sendEmail/_version/1/',
+                        task: task,
+                        errors: jdata['errors']
+                    };
+                    throw new errors_1.RestApiRequestError(400, '', {}, errors);
+                }
+                else {
+                    const json = {
+                        resource: 'v1/resource/sendEmail/_version/1/',
+                        uri: 'v1/resource/sendEmail/_version/1/',
+                        task: task,
+                        ntuser: jdata.ntuser,
+                        'ams.user': jdata['ams.user'],
+                        'file.message': jdata['file.message'],
+                        module: jdata.module,
+                        site: jdata.site
                     };
                     return { json, statusCode: 200 };
                 }

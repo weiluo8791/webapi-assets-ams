@@ -1,0 +1,26 @@
+{
+    "id": "ams-task-edit-sendEmail",
+    "resource": "v1/resource/scope/_version/1/",    
+    "description": [
+        {
+            "data": "Allows send email list to ams for outgoing mail",
+            "contentType": "text/plain",
+            "language": "en-US"
+        }
+    ],
+    "defaultRule": "allow",
+    "aclRules": [],
+    "apis": [
+        {
+            "api": "ams-edit._.sendEmail",
+            "version": 1,
+            "methods": [
+                "put",
+                "patch",
+                "post",
+                "delete"
+            ],
+            "defURI": "v1/api/ams-edit._.sendEmail/_version/1/"
+        }     
+    ]
+}
