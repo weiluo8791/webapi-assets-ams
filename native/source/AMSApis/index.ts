@@ -651,69 +651,72 @@ export abstract class AMSApis extends Handler {
             })
             .then(a => {
                 let jdata = processAmsData(a);
-                if (TYPE === 'TaskPut') { // task PUT
-                    if (jdata['errors']) {
-                        const errors = {
-                            resource: 'v1/resource/ams-edit/_version/1/',
-                            uri: 'v1/resource/ams-edit/_version/1/',
-                            task: task,
-                            errors: jdata['errors']
-                        };
-                        throw new RestApiRequestError(400, '', {}, errors);
-                    } else {
-                        const json = {
-                            resource: 'v1/resource/ams-edit/_version/1/',
-                            uri: 'v1/resource/ams-edit/_version/1/',
-                            task: task,
-                            site: jdata.site,
-                            module: jdata.module,
-                            ntuser: jdata.ntuser,
-                            'task.last.edit': jdata['task.last.edit']
-                        };
-                        return { json, statusCode: 200 };
-                    }
-                } else if (TYPE === 'TaskPutText') { // customer and inhouse text PUT
-                    if (jdata['errors']) {
-                        const errors = {
-                            resource: 'v1/resource/addText/_version/1/',
-                            uri: 'v1/resource/addText/_version/1/',
-                            task: task,
-                            errors: jdata['errors']
-                        };
-                        throw new RestApiRequestError(400, '', {}, errors);
-                    } else {
-                        const json = {
-                            resource: 'v1/resource/addText/_version/1/',
-                            uri: 'v1/resource/addText/_version/1/',
-                            task: task,
-                            site: jdata.site,
-                            ntuser: jdata.ntuser,
-                            'task.last.edit': jdata['task.last.edit']
-                        };
-                        return { json, statusCode: 200 };
-                    }
-                } else if (TYPE === 'TaskEmail') { // send list of email to AMS
-                    if (jdata['errors']) {
-                        const errors = {
-                            resource: 'v1/resource/sendEmail/_version/1/',
-                            uri: 'v1/resource/sendEmail/_version/1/',
-                            task: task,
-                            errors: jdata['errors']
-                        };
-                        throw new RestApiRequestError(400, '', {}, errors);
-                    } else {
-                        const json = {
-                            resource: 'v1/resource/sendEmail/_version/1/',
-                            uri: 'v1/resource/sendEmail/_version/1/',
-                            task: task,
-                            ntuser: jdata.ntuser,
-                            'ams.user': jdata['ams.user'],
-                            'file.message': jdata['file.message'],
-                            module: jdata.module,
-                            site: jdata.site
-                        };
-                        return { json, statusCode: 200 };
-                    }
+                switch (TYPE) {
+                    case 'TaskPut':
+                        if (jdata['errors']) {
+                            const errors = {
+                                resource: 'v1/resource/ams-edit/_version/1/',
+                                uri: 'v1/resource/ams-edit/_version/1/',
+                                task: task,
+                                errors: jdata['errors']
+                            };
+                            throw new RestApiRequestError(400, '', {}, errors);
+                        } else {
+                            const json = {
+                                resource: 'v1/resource/ams-edit/_version/1/',
+                                uri: 'v1/resource/ams-edit/_version/1/',
+                                task: task,
+                                site: jdata.site,
+                                module: jdata.module,
+                                ntuser: jdata.ntuser,
+                                'task.last.edit': jdata['task.last.edit']
+                            };
+                            return { json, statusCode: 200 };
+                        }
+                    case 'TaskPutText':
+                        if (jdata['errors']) {
+                            const errors = {
+                                resource: 'v1/resource/addText/_version/1/',
+                                uri: 'v1/resource/addText/_version/1/',
+                                task: task,
+                                errors: jdata['errors']
+                            };
+                            throw new RestApiRequestError(400, '', {}, errors);
+                        } else {
+                            const json = {
+                                resource: 'v1/resource/addText/_version/1/',
+                                uri: 'v1/resource/addText/_version/1/',
+                                task: task,
+                                site: jdata.site,
+                                ntuser: jdata.ntuser,
+                                'task.last.edit': jdata['task.last.edit']
+                            };
+                            return { json, statusCode: 200 };
+                        }
+                    case 'TaskEmail':
+                        if (jdata['errors']) {
+                            const errors = {
+                                resource: 'v1/resource/sendEmail/_version/1/',
+                                uri: 'v1/resource/sendEmail/_version/1/',
+                                task: task,
+                                errors: jdata['errors']
+                            };
+                            throw new RestApiRequestError(400, '', {}, errors);
+                        } else {
+                            const json = {
+                                resource: 'v1/resource/sendEmail/_version/1/',
+                                uri: 'v1/resource/sendEmail/_version/1/',
+                                task: task,
+                                ntuser: jdata.ntuser,
+                                'ams.user': jdata['ams.user'],
+                                'file.message': jdata['file.message'],
+                                module: jdata.module,
+                                site: jdata.site
+                            };
+                            return { json, statusCode: 200 };
+                        }
+                    default:
+                        throw new RestApiRequestError(500);
                 }
             })
             .then(resolvePromise, rejectPromise);
