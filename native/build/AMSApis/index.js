@@ -148,7 +148,7 @@ function putPackageAmsSend(task, type, ctx) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'dRmOXWAqG412709',
+        COOKIE: 'yCpKPOofw413846',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -299,6 +299,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
+                        'ams.user': jdata['ams.user'],
                         text: text,
                         start: start,
                         end: end,
@@ -325,6 +326,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
+                        'ams.user': jdata['ams.user'],
                         text: text,
                         start: start,
                         end: end,
@@ -351,6 +353,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
+                        'ams.user': jdata['ams.user'],
                         text: text,
                         count: jdata['count']
                     };
@@ -375,6 +378,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
+                        'ams.user': jdata['ams.user'],
                         text: text,
                         count: jdata['count']
                     };

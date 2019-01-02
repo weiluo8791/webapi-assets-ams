@@ -772,8 +772,31 @@
                         "object": {
                             "properties": {
                                 "module": {
-                                    "type": "string"
+                                    "type": "object",
+                                    "object": {
+                                        "properties": {
+                                            "mod": {
+                                                "type": "string"
+                                            },
+                                            "module.name": {
+                                                "type": "string"
+                                            }                                
+                                        }
+                                    }
                                 },
+                                "product.line": {
+                                    "type": "object",
+                                    "object": {
+                                        "properties": {
+                                            "dts.module.product.line": {
+                                                "type": "string"
+                                            },
+                                            "product.line.name": {
+                                                "type": "string"
+                                            }                                
+                                        }
+                                    }
+                                },                                
                                 "number": {
                                     "type": "string"
                                 },
@@ -869,6 +892,23 @@
                         "type": "string"
                     },
                     "file.description": {
+                        "type": "string"
+                    },                    
+                    "file.customer.access": {
+                        "type": "string"
+                    },
+                    "file.upload.device": {
+                        "type": "string"
+                    },
+                    "file.dos.edit.date": {
+                        "type": "string",
+                        "#doc": "MM/DD/YY"
+                    },
+                    "file.dos.edit.time": {
+                        "type": "string",
+                        "#doc": "HHMM (24 hr clock)"
+                    },
+                    "file.program.id": {
                         "type": "string"
                     }
                 }

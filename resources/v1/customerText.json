@@ -18,7 +18,12 @@
             "type": "string",
             "required": true,
             "responseOnly": true
-        },        
+        },
+        "ams.user": {
+            "type": "string",
+            "required": true,
+            "responseOnly": true
+        },                
         "text": {
             "type": "string",
             "required": true,
