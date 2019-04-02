@@ -180,9 +180,7 @@
             "requestOnly": true
         },
         "ams.task.contact": {
-            "type": "string",
-            "required": true,
-            "requestOnly": true
+            "type": "string"
         },
         "ams.task.contact.phone": {
             "type": "string",
@@ -194,23 +192,15 @@
             "object": {
                 "properties": {
                     "ams.task.email": {
-                        "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "type": "string"
                     },
                     "ams.task.email.notify.type": {
-                        "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "type": "string"
                     },
                     "task.notify.type.name": {
-                        "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "type": "string"
                     }
-                },
-                "required": true,
-                "requestOnly": true
+                }
             }
         },
         "module.notifications": {
