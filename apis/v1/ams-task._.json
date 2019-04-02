@@ -1,0 +1,53 @@
+{
+    "id": "ams-task._",
+    "version": 1,
+    "resource": "v1/resource/api/_version/1/",
+    "uri": "v1/api/ams-task._/_version/1/",
+    "status": "draft",
+    "route": [
+        {
+            "id": "ams-task",
+            "type": "static"
+        },
+        {
+            "id": "task",
+            "type": "dynamic"
+        }
+    ],
+    "methods": {
+        "get": {
+            "urlParameters": {
+                "NTUSER": {
+                    "type": "string"
+                }
+            },
+            "#doc": "get an ams-task resource"
+        },        
+        "put": {
+            "#doc": "put an ams-task resource"
+        },
+        "patch": {
+            "#doc": "patch an ams-task resource"
+        },
+        "post": {
+            "#doc": "post an ams-task resource"
+        },
+        "delete": {
+            "#doc": "delete an ams-task resource"
+        }        
+    },
+    "request": {
+        "resource": "v1/resource/ams-task/_version/1/"
+    },    
+    "response": {
+        "resource": "v1/resource/ams-task/_version/1/"
+    },
+    "connectivity": [
+        {
+            "handlerType": "native",
+            "native": {
+                "id": "AMSApis"
+            }
+        }
+    ]
+}

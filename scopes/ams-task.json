@@ -1,0 +1,27 @@
+{
+    "id": "ams-task",
+    "resource": "v1/resource/scope/_version/1/",    
+    "description": [
+        {
+            "data": "Allows Get and Edit ams task",
+            "contentType": "text/plain",
+            "language": "en-US"
+        }
+    ],
+    "defaultRule": "allow",
+    "aclRules": [],
+    "apis": [
+        {
+            "api": "ams-task._",
+            "version": 1,
+            "methods": [
+                "get",
+                "put",
+                "patch",
+                "post",
+                "delete"
+            ],
+            "defURI": "v1/api/ams-task._/_version/1/"
+        }     
+    ]
+}
