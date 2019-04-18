@@ -69,13 +69,13 @@
         "entryTime": {
             "type": "string",
             "required": true,
-            "requestOnly": true,
+            "responseOnly": true,
             "#doc": "ISO-8601 Date"
         },
-        "receiveDate": {
+        "receivedDate": {
             "type": "string",
             "required": true,
-            "requestOnly": true,
+            "responseOnly": true,
             "#doc": "ISO-8601 Date"
         },
         "status": {
@@ -84,17 +84,14 @@
                 "properties": {
                     "mnemonic": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "name": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     }
                 },
-                "required": true,
-                "requestOnly": true
+                "required": true
             }
         },
         "statusCompletedDate": {
@@ -107,23 +104,20 @@
                 "properties": {
                     "mnemonic": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "name": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     }
                 },
-                "required": true,
-                "requestOnly": true
+                "required": true
             }
         },
         "patientSafety": {
             "type": "string",
             "required": true,
-            "requestOnly": true
+            "responseOnly": true
         },
         "priorityLists": {
             "type": "object[]",
@@ -144,12 +138,11 @@
         "referenceNumber": {
             "type": "string",
             "required": true,
-            "requestOnly": true
+            "responseOnly": true
         },
         "description": {
             "type": "string",
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "requestType": {
             "type": "object",
@@ -158,32 +151,29 @@
                     "mnemonic": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     },
                     "name": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     }
                 },
                 "required": true,
-                "requestOnly": true
+                "responseOnly": true
             }
         },
         "liveSystem": {
             "type": "string",
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "testSystem": {
             "type": "string",
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "updateSystem": {
             "type": "string",
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "contact": {
             "type": "string",
@@ -191,8 +181,7 @@
         },
         "contactPhone": {
             "type": "string",
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "email": {
             "type": "object",
@@ -243,16 +232,16 @@
                     "mnemonic": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     },
                     "name": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     }
                 },
                 "required": true,
-                "requestOnly": true
+                "responseOnly": true
             }
         },
         "assignedTo": {
@@ -261,17 +250,14 @@
                 "properties": {
                     "mnemonic": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "name": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     }
                 },
-                "required": true,
-                "requestOnly": true
+                "required": true
             }
         },
         "staff": {
@@ -280,8 +266,7 @@
                 "properties": {
                     "responsibleUser": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "type": {
                         "type": "object",
@@ -289,18 +274,15 @@
                             "properties": {
                                 "mnemonic": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 },
                                 "name": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 }                 
                             }
                         },
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "module": {
                         "type": "object",
@@ -308,18 +290,15 @@
                             "properties": {
                                 "mnemonic": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 },
                                 "name": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 }                 
                             }
                         },
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "user": {
                         "type": "object",
@@ -327,18 +306,15 @@
                             "properties": {
                                 "mnemonic": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 },
                                 "name": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 }                 
                             }
                         },
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "notifyType": {
                         "type": "object",
@@ -346,18 +322,15 @@
                             "properties": {
                                 "mnemonic": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 },
                                 "name": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 }                 
                             }
                         },
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     },
                     "action": {
                         "type": "object",
@@ -365,23 +338,19 @@
                             "properties": {
                                 "mnemonic": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 },
                                 "name": {
                                     "type": "string",
-                                    "required": true,
-                                    "requestOnly": true
+                                    "required": true
                                 }                 
                             }
                         },
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     }                                                               
                 }
             },
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "lastEdit": {
             "type": "string",
@@ -513,26 +482,26 @@
                     "mnemonic": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     },
                     "name": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     }
                 }
             },
             "required": true,
-            "requestOnly": true
+            "responseOnly": true
         },
-        "task.shift": {
+        "shift": {
             "type": "object",
             "object": {
                 "properties": {
-                    "ams.task.shift": {
+                    "mnemonic": {
                         "type": "string"
                     },
-                    "task.shift.name": {
+                    "name": {
                         "type": "string"
                     }
                 }
@@ -548,8 +517,7 @@
         "targetDate": {
             "type": "string",
             "#doc": "ISO-8601 Date",
-            "required": true,
-            "requestOnly": true
+            "required": true
         },
         "category": {
             "type": "object",
@@ -558,27 +526,27 @@
                     "mnemonic": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     },
                     "technology": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     },
                     "technologyName": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     },
                     "name": {
                         "type": "string",
                         "required": true,
-                        "requestOnly": true
+                        "responseOnly": true
                     }
                 }
             },
             "required": true,
-            "requestOnly": true
+            "responseOnly": true
         },
         "supportGroup": {
             "type": "object",
@@ -586,13 +554,11 @@
                 "properties": {
                     "mnemonic": {
                         "type": "string",
-                        "required": true,
-                        "requestOnly": true
+                        "required": true
                     }
                 }
             },
-            "required": true,
-            "requestOnly": true
+            "required": true
         },   
         "keywords": {
             "type": "object[]",

@@ -22,7 +22,7 @@ const NTUSER_L = '0006';
 const TYPE_L = '0004';
 const Task_L = '0004';
 const WAC_L = '0003';
-const COOKIE_L = '0006';
+const COOKIE_L = '0009';
 const text_L = '0004';
 const start_L = '0005';
 const end_L = '0003';
@@ -148,7 +148,7 @@ function putPackageAmsSend(task, type, ctx) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        COOKIE: 'yCpKPOofw413846',
+        NO_COOKIE: '1',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -166,7 +166,7 @@ function putPackageAmsSend(task, type, ctx) {
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
     amsPacket += Task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
     amsPacket += WAC_L + stringToHex('WAC') + hex16(amsPackage.WAC.length) + stringToHex(amsPackage.WAC);
-    amsPacket += COOKIE_L + stringToHex('COOKIE') + hex16(amsPackage.COOKIE.length) + stringToHex(amsPackage.COOKIE);
+    amsPacket += COOKIE_L + stringToHex('NO_COOKIE') + hex16(amsPackage.NO_COOKIE.length) + stringToHex(amsPackage.NO_COOKIE);
     amsPacket += bodyName_L + stringToHex('jsonBody') + body_L + stringToHex(body);
     return amsPacket;
 }
@@ -234,11 +234,14 @@ class AMSApis extends Handler_1.Handler {
         let text;
         let NTUSER;
         NTUSER = ctx.query['NTUSER'] ? ctx.query['NTUSER'] : 'ROGERS';
-        Promise.all([ctx.apiInfo])
-            .then(([apiInfo]) => {
+        ctx.apiInfo
+            .then((apiInfo) => {
             task = apiInfo.routeParams['task'];
             switch (apiInfo.id) {
                 case 'ams-view._':
+                    TYPE = 'TaskGet';
+                    return getPackageAmsSend(task, TYPE, NTUSER);
+                case 'ams-task._':
                     TYPE = 'TaskGet';
                     return getPackageAmsSend(task, TYPE, NTUSER);
                 case 'ams-view._.question':
@@ -282,14 +285,14 @@ class AMSApis extends Handler_1.Handler {
             .then(a => {
             let jdata = processAmsData(a);
             if (text === 'C') {
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors'] || jdata['errorCode'] || jdata['errorMessage']) {
                     const errors = {
                         resource: 'v1/resource/customerText/_version/1/',
                         uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        'errorCode': jdata['errorCode'],
+                        'errorMessage': jdata['errorMessage']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -299,7 +302,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
-                        'ams.user': jdata['ams.user'],
+                        'amsUser': jdata['amsUser'],
                         text: text,
                         start: start,
                         end: end,
@@ -309,14 +312,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (text === 'I') {
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors'] || jdata['errorCode'] || jdata['errorMessage']) {
                     const errors = {
                         resource: 'v1/resource/inhouseText/_version/1/',
                         uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        'errorCode': jdata['errorCode'],
+                        'errorMessage': jdata['errorMessage']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -326,7 +329,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
-                        'ams.user': jdata['ams.user'],
+                        'amsUser': jdata['amsUser'],
                         text: text,
                         start: start,
                         end: end,
@@ -336,14 +339,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (text === 'TC') {
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors'] || jdata['errorCode'] || jdata['errorMessage']) {
                     const errors = {
                         resource: 'v1/resource/customerText/_version/1/',
                         uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        'errorCode': jdata['errorCode'],
+                        'errorMessage': jdata['errorMessage']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -353,7 +356,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/customerText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
-                        'ams.user': jdata['ams.user'],
+                        'amsUser': jdata['amsUser'],
                         text: text,
                         count: jdata['count']
                     };
@@ -361,14 +364,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (text === 'TI') {
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors'] || jdata['errorCode'] || jdata['errorMessage']) {
                     const errors = {
                         resource: 'v1/resource/inhouseText/_version/1/',
                         uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        'errorCode': jdata['errorCode'],
+                        'errorMessage': jdata['errorMessage']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -378,7 +381,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/inhouseText/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
-                        'ams.user': jdata['ams.user'],
+                        'amsUser': jdata['amsUser'],
                         text: text,
                         count: jdata['count']
                     };
@@ -386,14 +389,14 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else if (jdata['questions']) {
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors'] || jdata['errorCode'] || jdata['errorMessage']) {
                     const errors = {
                         resource: 'v1/resource/question/_version/1/',
                         uri: 'v1/resource/question/_version/1/',
                         task: task,
                         errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        'errorCode': jdata['errorCode'],
+                        'errorMessage': jdata['errorMessage']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
@@ -403,7 +406,7 @@ class AMSApis extends Handler_1.Handler {
                         uri: 'v1/resource/question/_version/1/',
                         task: task,
                         ntuser: jdata.ntuser,
-                        'ams.user': jdata['ams.user']
+                        'amsUser': jdata['amsUser']
                     };
                     if (jdata['questions']) {
                         json['questions'] = jdata['questions'];
@@ -412,74 +415,74 @@ class AMSApis extends Handler_1.Handler {
                 }
             }
             else {
-                if (jdata['errors'] || jdata['error.code'] || jdata['error.message']) {
+                if (jdata['errors'] || jdata['errorCode'] || jdata['errorMessage']) {
                     const errors = {
-                        resource: 'v1/resource/ams-view/_version/1/',
-                        uri: 'v1/resource/ams-view/_version/1/',
+                        resource: 'v1/resource/ams-task/_version/1/',
+                        uri: 'v1/resource/ams-task/_version/1/',
                         task: task,
                         errors: jdata['errors'],
-                        'error.code': jdata['error.code'],
-                        'error.message': jdata['error.message']
+                        'errorCode': jdata['errorCode'],
+                        'errorMessage': jdata['errorMessage']
                     };
                     throw new errors_1.RestApiRequestError(400, '', {}, errors);
                 }
                 else {
                     const json = {
-                        resource: 'v1/resource/ams-view/_version/1/',
-                        uri: 'v1/resource/ams-view/_version/1/',
+                        resource: 'v1/resource/ams-task/_version/1/',
+                        uri: 'v1/resource/ams-task/_version/1/',
                         task: task,
                         site: jdata.site,
                         ntuser: jdata.ntuser,
                         module: jdata.module,
                         email: jdata.email,
                         staff: jdata.staff,
-                        'ams.user': jdata['ams.user'],
-                        'ams.task.received.date': jdata['ams.task.received.date'],
-                        'task.product.group': jdata['task.product.group'],
-                        'ams.task.entry.time': jdata['ams.task.entry.time'],
-                        'task.status': jdata['task.status'],
-                        'task.priority': jdata['task.priority'],
-                        'ams.task.patient.safety': jdata['ams.task.patient.safety'],
-                        'ams.task.reference.number': jdata['ams.task.reference.number'],
-                        'ams.task.description': jdata['ams.task.description'],
-                        'task.request.type': jdata['task.request.type'],
-                        'ams.task.live.system': jdata['ams.task.live.system'],
-                        'ams.task.test.system': jdata['ams.task.test.system'],
-                        'ams.task.update.system': jdata['ams.task.update.system'],
-                        'ams.task.contact': jdata['ams.task.contact'],
-                        'ams.task.contact.phone': jdata['ams.task.contact.phone'],
-                        'task.received.by': jdata['task.received.by'],
-                        'task.last.edit': jdata['task.last.edit'],
-                        'task.category': jdata['task.category'],
-                        'ams.task.target.date': jdata['ams.task.target.date'],
-                        'task.support.group': jdata['task.support.group']
+                        'amsUser': jdata['amsUser'],
+                        'receivedDate': jdata['receivedDate'],
+                        'productGroup': jdata['productGroup'],
+                        'entryTime': jdata['entryTime'],
+                        'status': jdata['status'],
+                        'priority': jdata['priority'],
+                        'patientSafety': jdata['patientSafety'],
+                        'referenceNumber': jdata['referenceNumber'],
+                        'description': jdata['description'],
+                        'requestType': jdata['requestType'],
+                        'liveSystem': jdata['liveSystem'],
+                        'testSystem': jdata['testSystem'],
+                        'updateSystem': jdata['updateSystem'],
+                        'contact': jdata['contact'],
+                        'contactPhone': jdata['contactPhone'],
+                        'receivedBy': jdata['receivedBy'],
+                        'lastEdit': jdata['lastEdit'],
+                        'category': jdata['category'],
+                        'targetDate': jdata['targetDate'],
+                        'supportGroup': jdata['supportGroup']
                     };
-                    if (jdata['ams.task.trap.file']) {
-                        json['ams.task.trap.file'] = jdata['ams.task.trap.file'];
+                    if (jdata['trapFile']) {
+                        json['trapFile'] = jdata['trapFile'];
                     }
-                    if (jdata['ams.task.shift.date']) {
-                        json['ams.task.shift.date'] = jdata['ams.task.shift.date'];
+                    if (jdata['shiftDate']) {
+                        json['shiftDate'] = jdata['shiftDate'];
                     }
-                    if (jdata['task.shift']) {
-                        json['task.shift'] = jdata['task.shift'];
+                    if (jdata['shift']) {
+                        json['shift'] = jdata['shift'];
                     }
-                    if (jdata['task.assigned.to']) {
-                        json['task.assigned.to'] = jdata['task.assigned.to'];
+                    if (jdata['assignedTo']) {
+                        json['assignedTo'] = jdata['assignedTo'];
                     }
-                    if (jdata['task.status.completed.date']) {
-                        json['task.status.completed.date'] = jdata['task.status.completed.date'];
+                    if (jdata['statusCompletedDate']) {
+                        json['statusCompletedDate'] = jdata['statusCompletedDate'];
                     }
-                    if (jdata['priority.lists']) {
-                        json['priority.lists'] = jdata['priority.lists'];
+                    if (jdata['priorityLists']) {
+                        json['priorityLists'] = jdata['priorityLists'];
                     }
-                    if (jdata['module.notifications']) {
-                        json['module.notifications'] = jdata['module.notifications'];
+                    if (jdata['moduleNotifications']) {
+                        json['moduleNotifications'] = jdata['moduleNotifications'];
                     }
-                    if (jdata['related.issues']) {
-                        json['related.issues'] = jdata['related.issues'];
+                    if (jdata['relatedIssues']) {
+                        json['relatedIssues'] = jdata['relatedIssues'];
                     }
-                    if (jdata['task.keywords']) {
-                        json['task.keywords'] = jdata['task.keywords'];
+                    if (jdata['keywords']) {
+                        json['keywords'] = jdata['keywords'];
                     }
                     if (jdata['programs']) {
                         json['programs'] = jdata['programs'];
@@ -487,20 +490,20 @@ class AMSApis extends Handler_1.Handler {
                     if (jdata['development']) {
                         json['development'] = jdata['development'];
                     }
-                    if (jdata['web.uploaded.files']) {
-                        json['web.uploaded.files'] = jdata['web.uploaded.files'];
+                    if (jdata['webUploadedFiles']) {
+                        json['webUploadedFiles'] = jdata['webUploadedFiles'];
                     }
-                    if (jdata['ams.added.files']) {
-                        json['ams.added.files'] = jdata['ams.added.files'];
+                    if (jdata['amsAddedFiles']) {
+                        json['amsAddedFiles'] = jdata['amsAddedFiles'];
                     }
-                    if (jdata['ams.kb.articles']) {
-                        json['ams.kb.articles'] = jdata['ams.kb.articles'];
+                    if (jdata['kbArticles']) {
+                        json['kbArticles'] = jdata['kbArticles'];
                     }
                     if (jdata['warnings']) {
                         json['warnings'] = jdata['warnings'];
                     }
-                    if (jdata['warning.text']) {
-                        json['warning.text'] = jdata['warning.text'];
+                    if (jdata['warningText']) {
+                        json['warningText'] = jdata['warningText'];
                     }
                     return { json, statusCode: 200 };
                 }
@@ -511,11 +514,14 @@ class AMSApis extends Handler_1.Handler {
     _execute_put(ctx, resolvePromise, rejectPromise) {
         let task;
         let TYPE;
-        Promise.all([ctx.apiInfo])
-            .then(([apiInfo]) => {
+        ctx.apiInfo
+            .then((apiInfo) => {
             task = apiInfo.routeParams['task'];
             switch (apiInfo.id) {
                 case 'ams-edit._':
+                    TYPE = 'TaskPut';
+                    return putPackageAmsSend(task, TYPE, ctx);
+                case 'ams-task._':
                     TYPE = 'TaskPut';
                     return putPackageAmsSend(task, TYPE, ctx);
                 case 'ams-edit._.addText':
@@ -593,7 +599,7 @@ class AMSApis extends Handler_1.Handler {
                             uri: 'v1/resource/sendEmail/_version/1/',
                             task: task,
                             ntuser: jdata.ntuser,
-                            'ams.user': jdata['ams.user'],
+                            'amsUser': jdata['amsUser'],
                             'file.message': jdata['file.message'],
                             module: jdata.module,
                             site: jdata.site
@@ -607,8 +613,8 @@ class AMSApis extends Handler_1.Handler {
             .then(resolvePromise, rejectPromise);
     }
     _execute_patch(ctx, resolvePromise, rejectPromise) {
-        Promise.all([ctx.apiInfo])
-            .then(([apiInfo]) => {
+        ctx.apiInfo
+            .then((apiInfo) => {
             return this.patch(apiInfo.routeParams['Task'], ctx.body, ctx.headers['if-match'], ctx);
         })
             .then(json => {
@@ -618,8 +624,8 @@ class AMSApis extends Handler_1.Handler {
             .catch(rejectPromise);
     }
     _execute_delete(ctx, resolvePromise, rejectPromise) {
-        Promise.all([ctx.apiInfo])
-            .then(([apiInfo]) => {
+        ctx.apiInfo
+            .then((apiInfo) => {
             return this.delete(apiInfo.routeParams['id'], ctx);
         })
             .then(json => {
