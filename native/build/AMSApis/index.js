@@ -22,7 +22,7 @@ const NTUSER_L = '0006';
 const TYPE_L = '0004';
 const Task_L = '0004';
 const WAC_L = '0003';
-const COOKIE_L = '0009';
+const COOKIE_L = '0006';
 const text_L = '0004';
 const start_L = '0005';
 const end_L = '0003';
@@ -148,7 +148,7 @@ function putPackageAmsSend(task, type, ctx) {
         NTUSER: ntuser,
         TYPE: type,
         WAC: 'ZZZ',
-        NO_COOKIE: '1',
+        COOKIE: 'cYJHHyGhx434518',
         task: task,
         AMS_PARAM_TOTAL: totalParameters
     };
@@ -166,7 +166,7 @@ function putPackageAmsSend(task, type, ctx) {
     amsPacket += TYPE_L + stringToHex('TYPE') + hex16(amsPackage.TYPE.length) + stringToHex(amsPackage.TYPE);
     amsPacket += Task_L + stringToHex('task') + hex16(amsPackage.task.length) + stringToHex(amsPackage.task);
     amsPacket += WAC_L + stringToHex('WAC') + hex16(amsPackage.WAC.length) + stringToHex(amsPackage.WAC);
-    amsPacket += COOKIE_L + stringToHex('NO_COOKIE') + hex16(amsPackage.NO_COOKIE.length) + stringToHex(amsPackage.NO_COOKIE);
+    amsPacket += COOKIE_L + stringToHex('COOKIE') + hex16(amsPackage.COOKIE.length) + stringToHex(amsPackage.COOKIE);
     amsPacket += bodyName_L + stringToHex('jsonBody') + body_L + stringToHex(body);
     return amsPacket;
 }
@@ -235,12 +235,9 @@ class AMSApis extends Handler_1.Handler {
         let NTUSER;
         NTUSER = ctx.query['NTUSER'] ? ctx.query['NTUSER'] : 'ROGERS';
         ctx.apiInfo
-            .then((apiInfo) => {
-            task = apiInfo.routeParams['task'];
-            switch (apiInfo.id) {
-                case 'ams-view._':
-                    TYPE = 'TaskGet';
-                    return getPackageAmsSend(task, TYPE, NTUSER);
+            .then((api) => {
+            task = api.routeParams['task'];
+            switch (api.id) {
                 case 'ams-task._':
                     TYPE = 'TaskGet';
                     return getPackageAmsSend(task, TYPE, NTUSER);
@@ -249,7 +246,7 @@ class AMSApis extends Handler_1.Handler {
                     return getPackageAmsSend(task, TYPE, NTUSER);
                 case 'ams-view._.customerText._':
                     TYPE = 'TaskGetText';
-                    range = apiInfo.routeParams['range'];
+                    range = api.routeParams['range'];
                     if (range) {
                         start = range.split('-')[0];
                         end = range.split('-')[1];
@@ -263,7 +260,7 @@ class AMSApis extends Handler_1.Handler {
                     return getPackageAmsSend(task, TYPE, NTUSER, text, start, end);
                 case 'ams-view._.inhouseText._':
                     TYPE = 'TaskGetText';
-                    range = apiInfo.routeParams['range'];
+                    range = api.routeParams['range'];
                     if (range) {
                         start = range.split('-')[0];
                         end = range.split('-')[1];
@@ -515,12 +512,9 @@ class AMSApis extends Handler_1.Handler {
         let task;
         let TYPE;
         ctx.apiInfo
-            .then((apiInfo) => {
-            task = apiInfo.routeParams['task'];
-            switch (apiInfo.id) {
-                case 'ams-edit._':
-                    TYPE = 'TaskPut';
-                    return putPackageAmsSend(task, TYPE, ctx);
+            .then((api) => {
+            task = api.routeParams['task'];
+            switch (api.id) {
                 case 'ams-task._':
                     TYPE = 'TaskPut';
                     return putPackageAmsSend(task, TYPE, ctx);
@@ -614,8 +608,8 @@ class AMSApis extends Handler_1.Handler {
     }
     _execute_patch(ctx, resolvePromise, rejectPromise) {
         ctx.apiInfo
-            .then((apiInfo) => {
-            return this.patch(apiInfo.routeParams['Task'], ctx.body, ctx.headers['if-match'], ctx);
+            .then((api) => {
+            return this.patch(api.routeParams['Task'], ctx.body, ctx.headers['if-match'], ctx);
         })
             .then(json => {
             return { statusCode: 200, json };
@@ -625,8 +619,8 @@ class AMSApis extends Handler_1.Handler {
     }
     _execute_delete(ctx, resolvePromise, rejectPromise) {
         ctx.apiInfo
-            .then((apiInfo) => {
-            return this.delete(apiInfo.routeParams['id'], ctx);
+            .then((api) => {
+            return this.delete(api.routeParams['id'], ctx);
         })
             .then(json => {
             return { statusCode: 204 };
